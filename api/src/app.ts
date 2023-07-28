@@ -1,28 +1,42 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
-import userModel from "./models/user.model";
+import userRoute from "./routes/user.route";
+import productRoute from "./routes/product.route";
+import orderRoute from "./routes/order.route";
+import reviewRoute from "./routes/review.route";
+import authRoute from "./routes/auth.route";
+import createHttpError, { isHttpError } from "http-errors";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
-app.get("/", async (req, res, next) => {
-  try {
-    const users = await userModel.find().exec();
-    res.status(200).json(users);
-  } catch (error) {
-    next(error);
-  }
-});
+app.use(express.json());
+app.use(cookieParser());
+app.use(morgan("dev"));
+
+app.use("/api/orders", orderRoute);
+app.use("/api/products", productRoute);
+app.use("/api/reviews", reviewRoute);
+app.use("/api/users", userRoute);
+app.use("/api/auth", authRoute);
 
 app.use((req, res, next) => {
-  next(Error("Endpoint not found"));
+  next(createHttpError(404, "Endpoint not found"));
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
   console.error(error);
-  let errorMessage = "An unknown error occrute";
-  if (error instanceof Error) errorMessage = error.message;
-  res.status(500).json({ error: errorMessage });
+  let errorStatus = 500;
+  let errorMessage = "An unknown error occurred";
+  // if (error instanceof Error) errorMessage = error.message;
+  if (isHttpError(error)) {
+    errorStatus = error.status;
+    errorMessage = error.message;
+  }
+  res.status(errorStatus).json({ error: errorMessage });
+  //return res.status(errorStatus).send(errorMessage);
 });
 
 export default app;

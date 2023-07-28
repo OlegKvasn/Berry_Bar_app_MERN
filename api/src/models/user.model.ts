@@ -1,6 +1,6 @@
 import { Schema, model, InferSchemaType } from "mongoose";
 
-const userSchema = new Schema(
+const UserSchema = new Schema(
   {
     username: {
       type: String,
@@ -18,21 +18,19 @@ const userSchema = new Schema(
     },
     img: {
       type: String,
-      required: false,
-    },
-    country: {
-      type: String,
-      required: true,
     },
     phone: {
       type: String,
-      required: false,
+      required: true,
     },
-    desc: {
+    city: {
       type: String,
-      required: false,
+      required: true,
     },
-    isSeller: {
+    address: {
+      type: String,
+    },
+    isAdmin: {
       type: Boolean,
       default: false,
     },
@@ -40,6 +38,6 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-type User = InferSchemaType<typeof userSchema>;
+export type User = InferSchemaType<typeof UserSchema>;
 
-export default model<User>("User", userSchema);
+export default model<User>("User", UserSchema);
