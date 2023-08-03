@@ -2,7 +2,7 @@ import app from "./app";
 import env from "./utils/validateEnv";
 import mongoose from "mongoose";
 
-const port = env.PORT;
+const port = env.PORT || 8080;
 
 // mongoose
 //   .connect(env.MONGO_CONNECTION_STRING!)
