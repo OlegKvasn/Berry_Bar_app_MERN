@@ -11,6 +11,14 @@
   &.header[data-navbar="active"] {
     background-color: #fff;
     color: var(--green-color);
+    .button {
+      color: var(--green-color);
+      border: 1px solid var(--green-color);
+      &:hover {
+        background-color: var(--green-color);
+        color: #fff;
+      }
+    }
   }
   .mainContainer {
     width: 100%;
@@ -36,7 +44,7 @@
       background-color: transparent;
 
       &:hover {
-        background-color: #1dbf73;
+        background-color: #013914;
       }
     }
     .user {

@@ -1,30 +1,35 @@
-import { Request, RequestHandler } from "express";
-import UserModel from "../models/user.model";
+import { RequestHandler } from "express";
+import UserModel, { User } from "../models/user.model";
 import mongoose from "mongoose";
 import createHttpError from "http-errors";
+import { Authentication } from "../middleware/jwt";
 
-export interface Authentication {
-  userId: string;
+interface IRequestParams {
+  [key: string]: string;
 }
 
-export const getUsers: RequestHandler = async (req, res, next) => {
+export const getUser: RequestHandler = async (req, res, next) => {
   try {
-    const users = await UserModel.find().exec();
+    const users = await UserModel.findById(req.params.userId).exec();
     res.status(200).json(users);
   } catch (error) {
     next(error);
   }
 };
 
-export const deleteUser: RequestHandler = async (req, res, next) => {
+export const deleteUser: RequestHandler<
+  IRequestParams,
+  unknown,
+  User,
+  Authentication
+> = async (req, res, next) => {
   try {
     if (!mongoose.isValidObjectId(req.params.userId)) {
       throw createHttpError(400, "Invalid user id");
     }
-    const authenticatedReq = req as Request & Authentication;
     const user = await UserModel.findById(req.params.userId);
 
-    if (authenticatedReq.userId !== user?._id.toString()) {
+    if (req.auth.userId !== user?._id.toString()) {
       throw createHttpError(403, "You can delete only your account!");
     }
     await UserModel.findByIdAndDelete(req.params.userId);

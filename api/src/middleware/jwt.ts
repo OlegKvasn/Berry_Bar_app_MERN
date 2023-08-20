@@ -1,6 +1,6 @@
 import jwt, { VerifyOptions } from "jsonwebtoken";
 import env from ".././utils/validateEnv";
-import { Request, Response, NextFunction } from "express";
+import { RequestHandler } from "express";
 import createHttpError from "http-errors";
 
 export interface Payload {
@@ -13,11 +13,18 @@ export interface Authentication {
   isAdmin: boolean;
 }
 
-export const verifyToken = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+declare module "express-serve-static-core" {
+  interface Request {
+    auth: Authentication;
+  }
+}
+
+export const verifyToken: RequestHandler<
+  unknown,
+  unknown,
+  unknown,
+  Authentication
+> = (req, res, next) => {
   const token = req.cookies.accessToken;
   try {
     if (!token) {
@@ -31,9 +38,13 @@ export const verifyToken = (
         throw createHttpError(403, "Token is not valid!");
       }
       const payloadWithType = payload as Payload;
-      const authenticatedReq = req as Request & Authentication;
-      authenticatedReq.userId = payloadWithType?.id ?? "";
-      authenticatedReq.isAdmin = payloadWithType?.isAdmin ?? false;
+      // const authenticatedReq = req as Request & Authentication;
+      // authenticatedReq.userId = payloadWithType?.id ?? "";
+      // authenticatedReq.isAdmin = payloadWithType?.isAdmin ?? false;
+      req.auth = {
+        userId: payloadWithType?.id ?? "",
+        isAdmin: payloadWithType?.isAdmin ?? false,
+      };
       next();
     });
   } catch (error) {

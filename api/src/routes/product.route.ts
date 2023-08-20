@@ -6,13 +6,14 @@ import {
   getProducts,
   updateProduct,
 } from "../controllers/product.controller";
+import { verifyToken } from "../middleware/jwt";
 
 const router = express.Router();
 
 router.get("/", getProducts);
 router.get("/:productId", getProduct);
-router.post("/", createProduct);
-router.patch("/:productId", updateProduct);
-router.delete("/:productId", deleteProduct);
+router.post("/", verifyToken, createProduct);
+router.patch("/:productId", verifyToken, updateProduct);
+router.delete("/:productId", verifyToken, deleteProduct);
 
 export default router;

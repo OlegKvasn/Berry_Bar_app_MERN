@@ -1,0 +1,33 @@
+.reviews {
+  margin-top: 50px;
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    gap: 10px;
+    padding: 20px;
+    h3 {
+      color: #555;
+    }
+    textarea {
+      padding: 20px;
+    }
+    select {
+      padding: 20px;
+      width: 150px;
+      align-self: flex-end;
+    }
+    button {
+      width: 150px;
+      align-self: flex-end;
+      background-color: var(--green-color);
+      margin: 20px 0;
+      padding: 10px;
+      color: #fff;
+      border: none;
+      font-weight: 500;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  }
+}

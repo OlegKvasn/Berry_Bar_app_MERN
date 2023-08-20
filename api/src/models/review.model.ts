@@ -2,7 +2,7 @@ import { Schema, model, InferSchemaType } from "mongoose";
 
 const ReviewSchema = new Schema(
   {
-    ReviewId: {
+    productId: {
       type: String,
       required: true,
     },

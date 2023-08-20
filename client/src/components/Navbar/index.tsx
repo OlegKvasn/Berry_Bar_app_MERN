@@ -1,11 +1,14 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import style from "./navbar.module.scss";
 import { useEffect, useState } from "react";
+import newRequest from "../../utils/newRequest";
+import { IUser } from "../../types/models";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -16,10 +19,18 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", isActive);
   }, []);
 
-  const currentUser = {
-    id: 1,
-    username: "Oleg Kvasn",
-    isAdmin: true,
+  const currentUser: IUser = JSON.parse(
+    localStorage.getItem("currentUser") || "{}"
+  );
+
+  const handleLogout = async () => {
+    try {
+      await newRequest.post("/auth/logout");
+      localStorage.removeItem("currentUser");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -38,24 +49,24 @@ const Navbar = () => {
           <li>
             <Link to="/contacts">Контакти</Link>
           </li>
-          {!currentUser && (
+          <li>
+            <Link to="/cart">Корзина</Link>
+          </li>
+          {!currentUser.username && (
             <li>
               <Link to="/register">Реєстрація</Link>
             </li>
           )}
-          {!currentUser && (
+          {!currentUser.username && (
             <li>
               <button className={style.button}>
                 <NavLink to="/login">Вхід</NavLink>
               </button>
             </li>
           )}
-          {currentUser && (
+          {currentUser.username && (
             <li className={style.user} onClick={() => setOpen(!open)}>
-              <img
-                src="https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584_1280.png"
-                alt=""
-              />
+              <img src={currentUser.img || "/img/noavatar.jpg"} alt="" />
               <span>{currentUser?.username}</span>
               {open && (
                 <div className={style.options}>
@@ -66,7 +77,7 @@ const Navbar = () => {
                     </>
                   )}
                   <Link to="/orders">Замовлення</Link>
-                  <Link to="/">Вихід</Link>
+                  <div onClick={handleLogout}>Вихід</div>
                 </div>
               )}
             </li>

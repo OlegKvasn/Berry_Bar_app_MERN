@@ -1,11 +1,31 @@
 import { RequestHandler } from "express";
 import ProductModel, { Product } from "../models/product.model";
 import createHttpError from "http-errors";
-import mongoose from "mongoose";
+import mongoose, { SortOrder } from "mongoose";
+import { Authentication } from "../middleware/jwt";
+
+interface IRequestParams {
+  [key: string]: string;
+}
 
 export const getProducts: RequestHandler = async (req, res, next) => {
+  const q = req.query;
+  // const filters = {
+  //   title: { $regex: q.search, $options: "i" },
+  //   category: q.category,
+  // };
+  const filters = {
+    ...(q.search && { title: { $regex: q.search, $options: "i" } }),
+    ...(q.category && { category: q.category }),
+  };
+
+  const sortOptions: { [key: string]: SortOrder } = {};
+  if (q.sort) {
+    sortOptions[q.sort as string] = -1;
+  }
+
   try {
-    const products = await ProductModel.find().exec();
+    const products = await ProductModel.find(filters).sort(sortOptions).exec();
     res.status(200).json(products);
   } catch (error) {
     next(error);
@@ -32,10 +52,10 @@ export const getProduct: RequestHandler = async (req, res, next) => {
 };
 
 export const createProduct: RequestHandler<
-  unknown,
+  IRequestParams,
   unknown,
   Product,
-  unknown
+  Authentication
 > = async (req, res, next) => {
   try {
     if (
@@ -57,15 +77,11 @@ export const createProduct: RequestHandler<
   }
 };
 
-interface UpdateProductParams {
-  productId: string;
-}
-
 export const updateProduct: RequestHandler<
-  UpdateProductParams,
+  IRequestParams,
   unknown,
   Product,
-  unknown
+  Authentication
 > = async (req, res, next) => {
   const productId = req.params.productId;
   const newTitle = req.body.title;
@@ -80,8 +96,11 @@ export const updateProduct: RequestHandler<
     if (!mongoose.isValidObjectId(productId)) {
       throw createHttpError(400, "Invalid product id");
     }
-    if (!newTitle) {
-      throw createHttpError(400, "Product must have a title");
+    if (!newTitle || !newCategory || !newPrice || !newCover) {
+      throw createHttpError(
+        400,
+        "Product must have a title, category, price and cover"
+      );
     }
 
     const product = await ProductModel.findById(productId).exec();
@@ -107,7 +126,12 @@ export const updateProduct: RequestHandler<
   }
 };
 
-export const deleteProduct: RequestHandler = async (req, res, next) => {
+export const deleteProduct: RequestHandler<
+  IRequestParams,
+  unknown,
+  Product,
+  Authentication
+> = async (req, res, next) => {
   const productId = req.params.productId;
 
   try {

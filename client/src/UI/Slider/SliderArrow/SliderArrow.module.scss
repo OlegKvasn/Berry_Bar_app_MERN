@@ -1,0 +1,35 @@
+.mainContainer {
+  position: absolute;
+  z-index: 10;
+  .arrowButton {
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background-color: var(--slider-arrow-backgroundColor);
+    border: 1px solid gray;
+    border-radius: 50%;
+    box-shadow: 0 0.1rem 2rem rgba(4, 6, 28, 0.1);
+    opacity: var(--slider-arrow-opacity);
+    transition: all 0.15s;
+    &:hover {
+      background-color: #dedede;
+      border: 1px solid #dedede;
+      opacity: 0.6;
+    }
+    .icon {
+      color: #fff;
+    }
+  }
+  .arrowButton[data-arrow="previous"] {
+    left: -20px;
+  }
+  .arrowButton[data-arrow="next"] {
+    right: -20px;
+  }
+}
