@@ -1,4 +1,5 @@
 import { Schema, model, InferSchemaType } from "mongoose";
+import ProductModel from "../models/product.model";
 
 const OrderSchema = new Schema(
   {
@@ -6,12 +7,24 @@ const OrderSchema = new Schema(
       type: String,
       required: true,
     },
-    title: {
+    products: {
+      type: [{ ProductModel, quantity: Number }],
+      required: true,
+    },
+    orderNumber: {
+      type: Number,
+      required: true,
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+    delivery: {
       type: String,
       required: true,
     },
-    price: {
-      type: Number,
+    payment_intent: {
+      type: String,
       required: true,
     },
     isCompleted: {
