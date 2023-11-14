@@ -1,14 +1,21 @@
 import { Schema, model, InferSchemaType } from "mongoose";
-import ProductModel from "../models/product.model";
 
 const OrderSchema = new Schema(
   {
-    userID: {
+    userId: {
       type: String,
       required: true,
     },
     products: {
-      type: [{ ProductModel, quantity: Number }],
+      type: [
+        {
+          productId: String,
+          productImage: String,
+          productName: String,
+          productPrice: Number,
+          quantity: Number,
+        },
+      ],
       required: true,
     },
     orderNumber: {
@@ -23,13 +30,14 @@ const OrderSchema = new Schema(
       type: String,
       required: true,
     },
-    payment_intent: {
+    paymentMethod: {
       type: String,
       required: true,
     },
-    isCompleted: {
-      type: Boolean,
-      default: false,
+    orderStatus: {
+      type: String,
+      default: "created",
+      enum: ["created", "confirmed", "completed"],
     },
   },
   { timestamps: true }

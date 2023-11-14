@@ -66,7 +66,7 @@ const ProductsPage = () => {
             {isLoading
               ? "Завантаження"
               : error
-              ? "щось пішл не так"
+              ? "щось пішло не так"
               : data.map((product: IProduct) => (
                   <ProductCard key={product._id} item={product} />
                 ))}

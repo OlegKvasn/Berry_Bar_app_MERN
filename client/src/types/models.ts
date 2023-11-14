@@ -36,3 +36,24 @@ export interface IReview {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IOrder {
+  _id: string;
+  userId: string;
+  products: [
+    {
+      productId: string;
+      productImage: string;
+      productName: string;
+      productPrice: number;
+      quantity: number;
+    }
+  ];
+  orderNumber: number;
+  totalPrice: number;
+  delivery: string;
+  paymentMethod: string;
+  orderStatus: "created" | "confirmed" | "completed";
+  createdAt: string;
+  updatedAt: string;
+}

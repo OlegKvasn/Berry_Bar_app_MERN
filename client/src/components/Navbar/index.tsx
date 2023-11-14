@@ -2,7 +2,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import style from "./navbar.module.scss";
 import { useEffect, useState } from "react";
 import newRequest from "../../utils/newRequest";
-import { IUser } from "../../types/models";
+import getCurrentUser from "../../utils/getCurrentUser";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
@@ -19,9 +19,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", isActive);
   }, []);
 
-  const currentUser: IUser = JSON.parse(
-    localStorage.getItem("currentUser") || "{}"
-  );
+  const currentUser = getCurrentUser();
 
   const handleLogout = async () => {
     try {
@@ -73,7 +71,7 @@ const Navbar = () => {
                   {currentUser?.isAdmin && (
                     <>
                       <Link to="/add-product">Добавити новий продукт</Link>
-                      <Link to="/products">Всі продукти</Link>
+                      <Link to="/products-admin">Всі продукти</Link>
                     </>
                   )}
                   <Link to="/orders">Замовлення</Link>

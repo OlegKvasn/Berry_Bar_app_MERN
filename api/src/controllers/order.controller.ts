@@ -16,11 +16,11 @@ export const createOrder: RequestHandler<
 > = async (req, res, next) => {
   const newOrder = new OrderModel({
     userId: req.auth.userId,
-    products: [req.body.products],
+    products: req.body.products,
     orderNumber: req.body.orderNumber,
     totalPrice: req.body.totalPrice,
     delivery: "самовивіз",
-    payment_intent: "оплата картою",
+    paymentMethod: "термінал",
   });
 
   try {
@@ -82,7 +82,7 @@ export const getUserOrders: RequestHandler<
   Order,
   Authentication
 > = async (req, res, next) => {
-  const userId = req.params.orderId;
+  const userId = req.params.userId;
   try {
     if (!mongoose.isValidObjectId(userId)) {
       throw createHttpError(400, "Invalid User id");
@@ -96,51 +96,74 @@ export const getUserOrders: RequestHandler<
   }
 };
 
-// export const updateProduct: RequestHandler<
-//   IRequestParams,
-//   unknown,
-//   Product,
-//   Authentication
-// > = async (req, res, next) => {
-//   const productId = req.params.productId;
-//   const newTitle = req.body.title;
-//   const newDesc = req.body.desc;
-//   const newCategory = req.body.category;
-//   const newPrice = req.body.price;
-//   const newCover = req.body.cover;
-//   const newIngredients = req.body.ingredients;
-//   const newStarNumber = req.body.starNumber;
-//   const newImages = req.body.images;
-//   try {
-//     if (!mongoose.isValidObjectId(productId)) {
-//       throw createHttpError(400, "Invalid product id");
-//     }
-//     if (!newTitle || !newCategory || !newPrice || !newCover) {
-//       throw createHttpError(
-//         400,
-//         "Product must have a title, category, price and cover"
-//       );
-//     }
+export const confirmOrder: RequestHandler<
+  IRequestParams,
+  unknown,
+  Order,
+  Authentication
+> = async (req, res, next) => {
+  const orderId = req.params.orderId;
+  const confirmedProducts = req.body.products;
+  const confirmedTotalPrice = req.body.totalPrice;
+  const confirmedDelivery = req.body.delivery;
+  const confirmedPaymentMethod = req.body.paymentMethod;
+  const confirmedOrderStatus = "confirmed";
+  try {
+    if (!mongoose.isValidObjectId(orderId)) {
+      throw createHttpError(400, "Invalid order id");
+    }
+    if (confirmedTotalPrice < 200) {
+      throw createHttpError(
+        403,
+        "Замовлення повинно бути не менше ніж на 200 грн"
+      );
+    }
 
-//     const product = await ProductModel.findById(productId).exec();
+    const order = await OrderModel.findById(orderId).exec();
 
-//     if (!product) {
-//       throw createHttpError(404, "Product not found");
-//     }
+    if (!order) {
+      throw createHttpError(404, "Order not found");
+    }
 
-//     product.title = newTitle;
-//     product.desc = newDesc;
-//     product.category = newCategory;
-//     product.price = newPrice;
-//     product.cover = newCover;
-//     product.ingredients = newIngredients;
-//     product.starNumber = newStarNumber;
-//     product.images = newImages;
+    order.products = confirmedProducts;
+    order.totalPrice = confirmedTotalPrice;
+    order.delivery = confirmedDelivery;
+    order.paymentMethod = confirmedPaymentMethod;
+    order.orderStatus = confirmedOrderStatus;
 
-//     const updatedProduct = await product.save();
+    const confirmedOrder = await order.save();
 
-//     res.status(200).json(updatedProduct);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    res.status(200).json(confirmedOrder);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const completeOrder: RequestHandler<
+  IRequestParams,
+  unknown,
+  Order,
+  Authentication
+> = async (req, res, next) => {
+  const orderId = req.params.orderId;
+  const confirmedOrderStatus = "completed";
+  try {
+    if (!mongoose.isValidObjectId(orderId)) {
+      throw createHttpError(400, "Invalid order id");
+    }
+
+    const order = await OrderModel.findById(orderId).exec();
+
+    if (!order) {
+      throw createHttpError(404, "Order not found");
+    }
+
+    order.orderStatus = confirmedOrderStatus;
+
+    const completedOrder = await order.save();
+
+    res.status(200).json(completedOrder);
+  } catch (error) {
+    next(error);
+  }
+};

@@ -17,6 +17,7 @@ import OrdersPage from "./page/orders";
 import AddProductPage from "./page/addProduct";
 import CartPage from "./page/cart";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ProductsAdminPage from "./page/products-admin";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,10 @@ function App() {
         {
           path: "/products",
           element: <ProductsPage />,
+        },
+        {
+          path: "/products-admin",
+          element: <ProductsAdminPage />,
         },
         {
           path: "/add-product",

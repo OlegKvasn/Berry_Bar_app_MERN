@@ -1,6 +1,14 @@
+import { useState } from "react";
 import style from "./featured.module.scss";
+import { useNavigate } from "react-router-dom";
 
 const Featured = () => {
+  const [input, setInput] = useState("");
+  const navigate = useNavigate();
+
+  const hadleSubmit = () => {
+    navigate(`/products?search=${input}`);
+  };
   return (
     <>
       <section className={style.mainContainer}>
@@ -11,9 +19,13 @@ const Featured = () => {
           <div className={style.search}>
             <div className={style.searchInput}>
               <img src="./img/search.png" alt="" />
-              <input type="text" placeholder="Знайди те, що хочеш скуштувати" />
+              <input
+                type="text"
+                placeholder="Знайди те, що хочеш скуштувати"
+                onChange={(e) => setInput(e.target.value)}
+              />
             </div>
-            <button>Пошук</button>
+            <button onClick={hadleSubmit}>Пошук</button>
           </div>
           <div className={style.popular}>
             <span>Популярне:</span>
