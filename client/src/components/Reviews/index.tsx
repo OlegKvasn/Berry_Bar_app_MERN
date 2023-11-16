@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Review from "../Review";
+import Review from "../review";
 import style from "./reviews.module.scss";
-import newRequest from "../../utils/newRequest";
-import { IReview } from "../../types/models";
 import { useState } from "react";
+import { newRequest } from "../../lib/utils";
+import { IReview } from "../../lib/types";
 
 interface InitialState {
   star: 1 | 2 | 3 | 4 | 5;

@@ -25,8 +25,11 @@ const ProductSchema = new Schema(
       required: true,
     },
     price: {
-      type: Number,
+      type: String,
       required: true,
+    },
+    salePrice: {
+      type: String,
     },
     cover: {
       type: String,

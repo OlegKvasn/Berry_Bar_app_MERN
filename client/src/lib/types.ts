@@ -20,6 +20,7 @@ export interface IProduct {
   starNumber: number;
   category: string;
   price: string;
+  salePrice?: string;
   cover: string;
   images?: string;
   sales: string;

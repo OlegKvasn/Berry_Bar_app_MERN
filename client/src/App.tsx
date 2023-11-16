@@ -5,16 +5,16 @@ import {
   useNavigation,
 } from "react-router-dom";
 import ProductsPage from "./page/products";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import ErrorPage from "./page/errorPage";
+import Navbar from "./components/header";
+import Footer from "./components/footer";
+import ErrorPage from "./page/error-page";
 import ProductPage from "./page/product";
 // import { fetchProduct } from "./utils/fetchProduct";
 import LoginPage from "./page/login";
 import HomePage from "./page/home";
 import RegisterPage from "./page/register";
 import OrdersPage from "./page/orders";
-import AddProductPage from "./page/addProduct";
+import AddProductPage from "./page/add-product";
 import CartPage from "./page/cart";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductsAdminPage from "./page/products-admin";

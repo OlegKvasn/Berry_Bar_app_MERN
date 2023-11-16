@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import style from "./productCard.module.scss";
 import Grid from "../grid";
-import { IProduct } from "../../types/models";
+import { IProduct } from "../../lib/types";
 
 const ProductCard = ({ item }: { item: IProduct }) => {
   return (

@@ -1,10 +1,10 @@
 // import { useLoaderData, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import style from "./product.module.scss";
-import newRequest from "../../utils/newRequest";
 import { useParams } from "react-router-dom";
-import { IProduct } from "../../types/models";
-import Reviews from "../../components/Reviews";
+import Reviews from "../../components/reviews";
+import { newRequest } from "../../lib/utils";
+import { IProduct } from "../../lib/types";
 
 const ProductPage = () => {
   const { id } = useParams();

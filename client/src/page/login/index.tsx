@@ -1,7 +1,7 @@
 import { useState } from "react";
 import style from "./login.module.scss";
-import newRequest from "../../utils/newRequest";
 import { useNavigate } from "react-router-dom";
+import { newRequest } from "../../lib/utils";
 
 const initialValues = {
   username: "",

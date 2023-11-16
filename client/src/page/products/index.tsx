@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { IProduct } from "../../types/models";
 import style from "./products.module.scss";
-import ProductCard from "../../components/ProductCard";
+import ProductCard from "../../components/product-card";
 import Grid from "../../components/grid";
 import { useQuery } from "@tanstack/react-query";
-import newRequest from "../../utils/newRequest";
 import { useLocation } from "react-router-dom";
+import { newRequest } from "../../lib/utils";
+import { IProduct } from "../../lib/types";
 
 const ProductsPage = () => {
   const [open, setOpen] = useState(false);

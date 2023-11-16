@@ -89,5 +89,8 @@
     justify-content: space-around;
     color: gray;
     font-weight: 300;
+    .menuLink {
+      text-transform: capitalize;
+    }
   }
 }

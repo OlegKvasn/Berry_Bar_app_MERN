@@ -1,8 +1,7 @@
 import { useState } from "react";
 import style from "./register.module.scss";
 import { useNavigate } from "react-router-dom";
-import upload from "../../utils/upload";
-import newRequest from "../../utils/newRequest";
+import { newRequest, upload } from "../../lib/utils";
 
 const initialValues = {
   username: "",

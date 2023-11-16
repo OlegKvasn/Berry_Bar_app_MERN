@@ -1,0 +1,76 @@
+.mainContainer {
+  display: flex;
+  justify-content: center;
+  .form {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    gap: 10px;
+    padding: 20px;
+    h3 {
+      color: #555;
+    }
+    label {
+      color: #c2bfbf;
+      font-size: 18px;
+    }
+    input,
+    select,
+    textarea {
+      padding: 20px;
+    }
+    .images {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    button {
+      background-color: var(--green-color);
+      margin: 20px 0;
+      padding: 10px;
+      color: #fff;
+      border: none;
+      font-weight: 500;
+      font-size: 18px;
+      cursor: pointer;
+
+      :disabled {
+        background-color: var(#555);
+      }
+    }
+    .add {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+
+      input {
+        width: 80%;
+        height: 0;
+      }
+    }
+
+    .addedIngredients {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+
+      button {
+        height: 30px;
+        font-size: 12px;
+        font-weight: 400;
+        background: transparent;
+        color: red;
+        border: 1px solid red;
+        display: flex;
+        align-items: center;
+        margin: 0 15px 0 5px;
+      }
+    }
+    button:disabled {
+      background-color: transparent;
+      cursor: default;
+    }
+  }
+}

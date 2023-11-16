@@ -1,8 +1,8 @@
 import style from "./home.module.scss";
-import Featured from "../../components/Featured";
+import Featured from "../../components/featured";
 import Carousel from "../../UI/Slider";
-import CatCard from "../../components/CatCard";
-import { cards } from "../../data/fakeData";
+import CatCard from "../../components/category-card";
+import { cards } from "../../lib/fake-data";
 
 const HomePage = () => {
   return (

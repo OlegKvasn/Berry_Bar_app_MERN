@@ -88,6 +88,7 @@ export const updateProduct: RequestHandler<
   const newDesc = req.body.desc;
   const newCategory = req.body.category;
   const newPrice = req.body.price;
+  const newSalePrice = req.body.salePrice;
   const newCover = req.body.cover;
   const newIngredients = req.body.ingredients;
   const newStarNumber = req.body.starNumber;
@@ -113,6 +114,7 @@ export const updateProduct: RequestHandler<
     product.desc = newDesc;
     product.category = newCategory;
     product.price = newPrice;
+    product.salePrice = newSalePrice;
     product.cover = newCover;
     product.ingredients = newIngredients;
     product.starNumber = newStarNumber;

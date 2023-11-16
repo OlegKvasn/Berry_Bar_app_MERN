@@ -1,8 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { IProduct } from "../../types/models";
 import style from "./products-admin.module.scss";
-import newRequest from "../../utils/newRequest";
-import getCurrentUser from "../../utils/getCurrentUser";
+import { getCurrentUser, newRequest } from "../../lib/utils";
+import { IProduct } from "../../lib/types";
 
 const ProductsAdminPage = () => {
   const currentUser = getCurrentUser();

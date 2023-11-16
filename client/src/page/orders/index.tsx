@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { IOrder } from "../../types/models";
 import style from "./orders.module.scss";
-import newRequest from "../../utils/newRequest";
+import { newRequest } from "../../lib/utils";
+import { IOrder } from "../../lib/types";
 
 const OrdersPage = () => {
   // const currentUser: IUser = JSON.parse(

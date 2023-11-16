@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { IReview, IUser } from "../../types/models";
 import style from "./review.module.scss";
-import newRequest from "../../utils/newRequest";
+import { IReview, IUser } from "../../lib/types";
+import { newRequest } from "../../lib/utils";
 
 const Review = ({ review }: { review: IReview }) => {
   const { isLoading, error, data } = useQuery({

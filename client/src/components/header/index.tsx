@@ -1,8 +1,8 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import style from "./navbar.module.scss";
 import { useEffect, useState } from "react";
-import newRequest from "../../utils/newRequest";
-import getCurrentUser from "../../utils/getCurrentUser";
+import { getCurrentUser, newRequest } from "../../lib/utils";
+import { category } from "../../lib/data";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
@@ -85,23 +85,13 @@ const Navbar = () => {
       {(active || pathname !== "/") && (
         <>
           <hr />
-          <div className={style.menu}>
-            <Link className={style.menuLink} to="/">
-              Pizza
-            </Link>
-            <Link className={style.menuLink} to="/">
-              Burger
-            </Link>
-            <Link className={style.menuLink} to="/">
-              Паста
-            </Link>
-            <Link className={style.menuLink} to="/">
-              Салати
-            </Link>
-            <Link className={style.menuLink} to="/">
-              Гриль
-            </Link>
-          </div>
+          <section className={style.menu}>
+            {category.map((cat) => (
+              <Link key={cat.value} className={style.menuLink} to="/">
+                {cat.name}
+              </Link>
+            ))}
+          </section>
           {/* <hr /> */}
         </>
       )}
