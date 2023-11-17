@@ -1,23 +1,20 @@
-import styles from "./button.module.css";
-import type { MouseEventHandler } from "react";
+import styles from "./button.module.scss";
 
-interface IButton {
+interface IButton extends React.ComponentProps<"button"> {
   children: React.ReactNode;
   className?: string;
-  borderRadius?: 20 | 10;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
+  borderRadius?: 20 | 10 | 0;
 }
 
 const Button = ({
   children,
   className,
-  borderRadius = 10,
-  onClick,
+  borderRadius = 0,
+  ...props
 }: IButton) => {
   return (
     <button
-      onClick={onClick}
-      type="button"
+      {...props}
       style={{ borderRadius: `${borderRadius}px` }}
       className={`${styles.button} ${className}`}
     >

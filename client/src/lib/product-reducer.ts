@@ -2,15 +2,22 @@ type ChangeInputAction = {
   type: "CHANGE_INPUT";
   payload: {
     name: string;
-    value: string | number;
+    value: string;
   };
 };
 
-type AddImagesAction = {
-  type: "ADD_IMAGES";
+type AddImageAction = {
+  type: "ADD_IMAGE";
   payload: {
     cover: string;
     // images: string[];
+  };
+};
+
+type RemoveImageAction = {
+  type: "REMOVE_IMAGE";
+  payload: {
+    cover: string;
   };
 };
 
@@ -26,7 +33,8 @@ type RemoveIngredientAction = {
 
 type ActionType =
   | ChangeInputAction
-  | AddImagesAction
+  | AddImageAction
+  | RemoveImageAction
   | AddIngredientAction
   | RemoveIngredientAction;
 
@@ -50,11 +58,16 @@ export const productReducer = (state: StateType, action: ActionType) => {
         ...state,
         [action.payload.name]: action.payload.value,
       };
-    case "ADD_IMAGES":
+    case "ADD_IMAGE":
       return {
         ...state,
         cover: action.payload.cover,
         // images: action.payload.images,
+      };
+    case "REMOVE_IMAGE":
+      return {
+        ...state,
+        cover: "",
       };
     case "ADD_INGREDIENT":
       return {

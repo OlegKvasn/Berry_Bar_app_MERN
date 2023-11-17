@@ -4,6 +4,9 @@ import style from "./addProduct.module.scss";
 import { INITIAL_STATE, productReducer } from "../../lib/product-reducer";
 import { newRequest, upload } from "../../lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Button from "../../UI/button";
+import CancelButton from "../../UI/icon-button/cancel";
+import DialogModal from "../../UI/dialog-modal";
 // import { useNavigate } from "react-router-dom";
 
 type TInitialState = typeof INITIAL_STATE;
@@ -14,6 +17,7 @@ type THandleChange =
   | React.ChangeEvent<HTMLSelectElement>;
 
 const AddProductPage = () => {
+  const [isOpen, setOpen] = useState(false);
   const [ingredient, setIngredient] = useState("");
   const [coverFile, setCoverFile] = useState<File | null>(null);
   // const [files, setFiles] = useState<FileList | null>(null);
@@ -51,10 +55,15 @@ const AddProductPage = () => {
       if (cover) {
         setUploaded(true);
       }
-      dispatch({ type: "ADD_IMAGES", payload: { cover } });
+      dispatch({ type: "ADD_IMAGE", payload: { cover } });
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const removeImage = () => {
+    dispatch({ type: "REMOVE_IMAGE", payload: { cover: "" } });
+    setUploaded(false);
   };
 
   // const navigate = useNavigate();
@@ -73,6 +82,7 @@ const AddProductPage = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     mutation.mutate(state);
+    setOpen(false);
     // navigate("/products-admin");
   };
 
@@ -82,7 +92,7 @@ const AddProductPage = () => {
     <main className={style.mainContainer}>
       <form className={style.form} onSubmit={handleSubmit}>
         <h3>Додати новий продукт</h3>
-        <label htmlFor="title">Назва</label>
+        <label htmlFor="title">* Назва</label>
         <input
           type="text"
           name="title"
@@ -90,7 +100,7 @@ const AddProductPage = () => {
           placeholder="Назва продукту"
           onChange={handleChange}
         />
-        <label htmlFor="category">Назва</label>
+        <label htmlFor="category">Категорія</label>
         <select name="category" id="category" onChange={handleChange}>
           {category.map((cat) => (
             <option key={cat.value} value={cat.value}>
@@ -98,7 +108,7 @@ const AddProductPage = () => {
             </option>
           ))}
         </select>
-        <label htmlFor="price">Ціна</label>
+        <label htmlFor="price">* Ціна</label>
         <input
           type="text"
           name="price"
@@ -114,7 +124,7 @@ const AddProductPage = () => {
           placeholder="Ціна продукту якщо є знижка"
           onChange={handleChange}
         />
-        <label htmlFor="cover">Зображення</label>
+        <label htmlFor="cover">* Зображення</label>
         <div className={style.images}>
           <input
             type="file"
@@ -130,11 +140,16 @@ const AddProductPage = () => {
               name="images"
               onChange={(e) => setFiles(e.target.files!)}
             /> */}
-
-          <button type="button" onClick={handleUpload} disabled={uploaded}>
+          <Button type="button" onClick={handleUpload} disabled={uploaded}>
             {uploaded ? "Фото Завантажено" : "Завантажити"}
-          </button>
+          </Button>
         </div>
+        {state.cover.length > 0 ? (
+          <div className={style.addedImage}>
+            <span>{state.cover}</span>
+            <CancelButton type="button" onClick={removeImage} />
+          </div>
+        ) : null}
         <label htmlFor="ing">Додати Інгредієнти</label>
         <div className={style.add}>
           <input
@@ -145,23 +160,29 @@ const AddProductPage = () => {
             onChange={(e) => setIngredient(e.target.value)}
             value={ingredient}
           />
-          <button type="button" onClick={handleAddIngredient}>
+          <Button type="button" onClick={handleAddIngredient}>
             додати
-          </button>
+          </Button>
         </div>
         <div className={style.addedIngredients}>
           {state.ingredients.map((ing, index) => (
             <React.Fragment key={index}>
               <span>{ing}</span>
               {ing.length > 0 ? (
-                <button
+                <CancelButton
+                  type="button"
                   onClick={() =>
                     dispatch({ type: "REMOVE_INGREDIENT", payload: ing })
                   }
-                >
-                  X
-                </button>
-              ) : null}
+                />
+              ) : // <button
+              //   onClick={() =>
+              //     dispatch({ type: "REMOVE_INGREDIENT", payload: ing })
+              //   }
+              // >
+              //   X
+              // </button>
+              null}
             </React.Fragment>
           ))}
         </div>
@@ -174,13 +195,21 @@ const AddProductPage = () => {
           rows={10}
           onChange={handleChange}
         />
-        <button
-          type="submit"
-          className={style.button}
-          // disabled={   !values.clientName || !values.email || !values.message || !checked}
+        <p>* Продукт повинен містити Назву, Ціну та Зображення</p>
+        <Button
+          type="button"
+          onClick={() => setOpen(true)}
+          disabled={
+            state.title.length < 1 ||
+            state.price.length < 1 ||
+            state.cover.length < 1
+          }
         >
           Створити
-        </button>
+        </Button>
+        <DialogModal open={isOpen} onClose={() => setOpen(false)}>
+          <Button type="submit">Підтвердити</Button>
+        </DialogModal>
       </form>
     </main>
   );
