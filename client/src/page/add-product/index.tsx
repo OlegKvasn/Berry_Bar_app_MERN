@@ -7,7 +7,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Button from "../../UI/button";
 import CancelButton from "../../UI/icon-button/cancel";
 import DialogModal from "../../UI/dialog-modal";
-// import { useNavigate } from "react-router-dom";
+import ProductCardCreating from "../../components/product-card-creating";
+import { useNavigate } from "react-router-dom";
 
 type TInitialState = typeof INITIAL_STATE;
 
@@ -66,7 +67,7 @@ const AddProductPage = () => {
     setUploaded(false);
   };
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 
@@ -83,10 +84,8 @@ const AddProductPage = () => {
     e.preventDefault();
     mutation.mutate(state);
     setOpen(false);
-    // navigate("/products-admin");
+    navigate("/products-admin");
   };
-
-  console.log(state);
 
   return (
     <main className={style.mainContainer}>
@@ -207,7 +206,16 @@ const AddProductPage = () => {
         >
           Створити
         </Button>
-        <DialogModal open={isOpen} onClose={() => setOpen(false)}>
+        <DialogModal isOpen={isOpen} onClose={() => setOpen(false)}>
+          <ProductCardCreating
+            title={state.title}
+            category={state.category}
+            cover={state.cover}
+            ingredients={state.ingredients}
+            desc={state.desc}
+            salePrice={state.salePrice}
+            price={state.price}
+          />
           <Button type="submit">Підтвердити</Button>
         </DialogModal>
       </form>

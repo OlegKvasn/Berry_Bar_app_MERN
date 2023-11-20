@@ -45,9 +45,9 @@ const ProductPage = () => {
             ) : null}
             <h2>Склад:</h2>
             {data?.ingredients
-              ? data?.ingredients.map((ingr: string, ind) => (
-                  <p className={style.desc} key={`${ind}${ingr}`}>
-                    {ingr}
+              ? data?.ingredients.map((ing: string, ind) => (
+                  <p className={style.desc} key={`${ind}${ing}`}>
+                    {ing}
                   </p>
                 ))
               : null}
