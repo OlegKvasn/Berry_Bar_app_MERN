@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { category } from "../../lib/data";
 import style from "./addProduct.module.scss";
 import { INITIAL_STATE, productReducer } from "../../lib/product-reducer";
@@ -8,7 +8,9 @@ import Button from "../../UI/button";
 import CancelButton from "../../UI/icon-button/cancel";
 import DialogModal from "../../UI/dialog-modal";
 import ProductCardCreating from "../../components/product-card-creating";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import ErrorModal from "../../components/error-modal";
+import { useValidateProduct } from "../../lib/hooks";
 
 type TInitialState = typeof INITIAL_STATE;
 
@@ -23,8 +25,53 @@ const AddProductPage = () => {
   const [coverFile, setCoverFile] = useState<File | null>(null);
   // const [files, setFiles] = useState<FileList | null>(null);
   const [uploaded, setUploaded] = useState(false);
-
   const [state, dispatch] = useReducer(productReducer, INITIAL_STATE);
+  const { id } = useParams();
+  const validatedProduct = useValidateProduct(id);
+
+  useEffect(() => {
+    if (validatedProduct) {
+      dispatch({
+        type: "CHANGE_INITIAL_STATE",
+        payload: {
+          title: validatedProduct.title,
+          category: validatedProduct.category,
+          price: validatedProduct.price,
+          salePrice: validatedProduct.salePrice || "",
+          cover: validatedProduct.cover,
+          ingredients: validatedProduct.ingredients || [""],
+          desc: validatedProduct.desc || "",
+        },
+      });
+    }
+  }, [validatedProduct]);
+  // useEffect(() => {
+  //   if (id) {
+  //     // const validId = validateProductId(id);
+  //     const fetchProductForEdit = async () => {
+  //       try {
+  //         const res = await axios.get(`${baseURL}products/${id}`);
+
+  //         const data = res.data as IProduct;
+  //         dispatch({
+  //           type: "CHANGE_INITIAL_STATE",
+  //           payload: {
+  //             title: data.title,
+  //             category: data.category,
+  //             price: data.price,
+  //             salePrice: data.salePrice || "",
+  //             cover: data.cover,
+  //             ingredients: data.ingredients || [""],
+  //             desc: data.desc || "",
+  //           },
+  //         });
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     };
+  //     fetchProductForEdit();
+  //   }
+  // }, [id]);
 
   const handleChange = ({ target }: THandleChange) => {
     dispatch({
@@ -71,7 +118,7 @@ const AddProductPage = () => {
 
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const createProductMutation = useMutation({
     mutationFn: (newProduct: TInitialState) => {
       return newRequest.post("/products", newProduct);
     },
@@ -80,27 +127,56 @@ const AddProductPage = () => {
     },
   });
 
+  const editProductMutation = useMutation({
+    mutationFn: (editProduct: TInitialState) => {
+      return newRequest.patch(`/products/${id}`, editProduct);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["products"]);
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutation.mutate(state);
-    setOpen(false);
-    navigate("/products-admin");
+    if (id) {
+      e.preventDefault();
+      editProductMutation.mutate(state);
+      setOpen(false);
+      navigate("/products-admin");
+    } else {
+      e.preventDefault();
+      createProductMutation.mutate(state);
+      setOpen(false);
+      navigate("/products-admin");
+    }
   };
 
   return (
     <main className={style.mainContainer}>
+      {!validatedProduct ? (
+        <ErrorModal
+          errorMessage="Продукту з таким ID не існує"
+          navigateUrl="/products-admin"
+          navigateText="До списку Продуктів"
+        />
+      ) : null}
       <form className={style.form} onSubmit={handleSubmit}>
-        <h3>Додати новий продукт</h3>
+        <h3>{id ? "Редагування продукту" : "Додати новий продукт"}</h3>
         <label htmlFor="title">* Назва</label>
         <input
           type="text"
           name="title"
           id="title"
           placeholder="Назва продукту"
+          value={state.title}
           onChange={handleChange}
         />
         <label htmlFor="category">Категорія</label>
-        <select name="category" id="category" onChange={handleChange}>
+        <select
+          name="category"
+          id="category"
+          onChange={handleChange}
+          value={state.category}
+        >
           {category.map((cat) => (
             <option key={cat.value} value={cat.value}>
               {cat.name}
@@ -113,6 +189,7 @@ const AddProductPage = () => {
           name="price"
           id="price"
           placeholder="Ціна продукту"
+          value={state.price}
           onChange={handleChange}
         />
         <label htmlFor="salePrice">Ціна зі знижкою</label>
@@ -121,6 +198,7 @@ const AddProductPage = () => {
           name="salePrice"
           id="salePrice"
           placeholder="Ціна продукту якщо є знижка"
+          value={state.salePrice}
           onChange={handleChange}
         />
         <label htmlFor="cover">* Зображення</label>
@@ -192,9 +270,11 @@ const AddProductPage = () => {
           placeholder="Додатковий опис(опціонально)"
           cols={30}
           rows={10}
+          value={state.desc}
           onChange={handleChange}
         />
         <p>* Продукт повинен містити Назву, Ціну та Зображення</p>
+
         <Button
           type="button"
           onClick={() => setOpen(true)}
@@ -204,7 +284,7 @@ const AddProductPage = () => {
             state.cover.length < 1
           }
         >
-          Створити
+          {id ? "Редагувати" : " Створити"}
         </Button>
         <DialogModal isOpen={isOpen} onClose={() => setOpen(false)}>
           <ProductCardCreating

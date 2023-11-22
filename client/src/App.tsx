@@ -65,6 +65,10 @@ function App() {
           element: <AddProductPage />,
         },
         {
+          path: "/add-product/:id",
+          element: <AddProductPage />,
+        },
+        {
           path: "/product/:id",
           element: <ProductPage />,
           // loader: fetchProduct,

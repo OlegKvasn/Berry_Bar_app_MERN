@@ -11,6 +11,7 @@ const ProductsPage = () => {
   const [open, setOpen] = useState(false);
   const [sort, setSort] = useState("sales");
   const { search } = useLocation();
+  console.log(search);
 
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["products"],
@@ -18,7 +19,7 @@ const ProductsPage = () => {
       newRequest(
         search ? `/products${search}&sort=${sort}` : `/products?sort=${sort}`
       ).then((res) => {
-        return res.data;
+        return res.data as IProduct[];
       }),
   });
 
@@ -67,7 +68,7 @@ const ProductsPage = () => {
               ? "Завантаження"
               : error
               ? "щось пішло не так"
-              : data.map((product: IProduct) => (
+              : data?.map((product) => (
                   <ProductCard key={product._id} item={product} />
                 ))}
           </Grid>

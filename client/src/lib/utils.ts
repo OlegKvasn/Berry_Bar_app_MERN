@@ -1,8 +1,10 @@
 import axios from "axios";
 import { IUser } from "./types";
 
+export const baseURL = "http://localhost:5000/api/";
+
 export const newRequest = axios.create({
-  baseURL: "http://localhost:5000/api/",
+  baseURL,
   withCredentials: true,
 });
 

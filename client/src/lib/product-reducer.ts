@@ -1,3 +1,13 @@
+type TState = {
+  title: string;
+  category: string;
+  price: string;
+  salePrice: string;
+  cover: string;
+  ingredients: string[];
+  desc: string;
+};
+
 type ChangeInputAction = {
   type: "CHANGE_INPUT";
   payload: {
@@ -31,12 +41,18 @@ type RemoveIngredientAction = {
   payload: string;
 };
 
+type ChahgeInitialStateAction = {
+  type: "CHANGE_INITIAL_STATE";
+  payload: TState;
+};
+
 type ActionType =
   | ChangeInputAction
   | AddImageAction
   | RemoveImageAction
   | AddIngredientAction
-  | RemoveIngredientAction;
+  | RemoveIngredientAction
+  | ChahgeInitialStateAction;
 
 export const INITIAL_STATE = {
   title: "",
@@ -49,9 +65,7 @@ export const INITIAL_STATE = {
   desc: "",
 };
 
-type StateType = typeof INITIAL_STATE;
-
-export const productReducer = (state: StateType, action: ActionType) => {
+export const productReducer = (state: TState, action: ActionType) => {
   switch (action.type) {
     case "CHANGE_INPUT":
       return {
@@ -80,6 +94,16 @@ export const productReducer = (state: StateType, action: ActionType) => {
         ingredients: state.ingredients.filter(
           (ingr) => ingr !== action.payload
         ),
+      };
+    case "CHANGE_INITIAL_STATE":
+      return {
+        title: action.payload.title,
+        category: action.payload.category,
+        price: action.payload.price,
+        salePrice: action.payload.salePrice,
+        cover: action.payload.cover,
+        ingredients: action.payload.ingredients,
+        desc: action.payload.desc,
       };
 
     default:
