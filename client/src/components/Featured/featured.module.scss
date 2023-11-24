@@ -19,8 +19,9 @@
       align-items: center;
       justify-content: space-between;
       background-color: #fff;
-      border-radius: 5px;
+      border-radius: 10px;
       .searchInput {
+        width: 100%;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -30,6 +31,8 @@
           margin: 10px;
         }
         input {
+          width: 100%;
+          color: var(--gray-color);
           border: none;
           outline: none;
           background-color: #fff;
@@ -43,6 +46,8 @@
         background-color: #013914;
         color: #fff;
         cursor: pointer;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
       }
     }
     .popular {

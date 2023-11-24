@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useState } from "react";
 import { category } from "../../lib/data";
 import style from "./addProduct.module.scss";
 import { INITIAL_STATE, productReducer } from "../../lib/product-reducer";
-import { newRequest, upload } from "../../lib/utils";
+import { baseURL, newRequest, upload } from "../../lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Button from "../../UI/button";
 import CancelButton from "../../UI/icon-button/cancel";
@@ -10,7 +10,8 @@ import DialogModal from "../../UI/dialog-modal";
 import ProductCardCreating from "../../components/product-card-creating";
 import { useNavigate, useParams } from "react-router-dom";
 import ErrorModal from "../../components/error-modal";
-import { useValidateProduct } from "../../lib/hooks";
+import axios from "axios";
+import { IProduct } from "../../lib/types";
 
 type TInitialState = typeof INITIAL_STATE;
 
@@ -19,59 +20,43 @@ type THandleChange =
   | React.ChangeEvent<HTMLTextAreaElement>
   | React.ChangeEvent<HTMLSelectElement>;
 
-const AddProductPage = () => {
-  const [isOpen, setOpen] = useState(false);
+const AddEditProductPage = () => {
+  const [isOpenModal, setOpenModal] = useState(false);
   const [ingredient, setIngredient] = useState("");
   const [coverFile, setCoverFile] = useState<File | null>(null);
   // const [files, setFiles] = useState<FileList | null>(null);
   const [uploaded, setUploaded] = useState(false);
+  const [errorWrongId, setErrorWrongId] = useState(false);
   const [state, dispatch] = useReducer(productReducer, INITIAL_STATE);
   const { id } = useParams();
-  const validatedProduct = useValidateProduct(id);
 
   useEffect(() => {
-    if (validatedProduct) {
-      dispatch({
-        type: "CHANGE_INITIAL_STATE",
-        payload: {
-          title: validatedProduct.title,
-          category: validatedProduct.category,
-          price: validatedProduct.price,
-          salePrice: validatedProduct.salePrice || "",
-          cover: validatedProduct.cover,
-          ingredients: validatedProduct.ingredients || [""],
-          desc: validatedProduct.desc || "",
-        },
-      });
-    }
-  }, [validatedProduct]);
-  // useEffect(() => {
-  //   if (id) {
-  //     // const validId = validateProductId(id);
-  //     const fetchProductForEdit = async () => {
-  //       try {
-  //         const res = await axios.get(`${baseURL}products/${id}`);
+    if (id) {
+      const fetchProductForEdit = async () => {
+        try {
+          const res = await axios.get(`${baseURL}products/${id}`);
 
-  //         const data = res.data as IProduct;
-  //         dispatch({
-  //           type: "CHANGE_INITIAL_STATE",
-  //           payload: {
-  //             title: data.title,
-  //             category: data.category,
-  //             price: data.price,
-  //             salePrice: data.salePrice || "",
-  //             cover: data.cover,
-  //             ingredients: data.ingredients || [""],
-  //             desc: data.desc || "",
-  //           },
-  //         });
-  //       } catch (err) {
-  //         console.log(err);
-  //       }
-  //     };
-  //     fetchProductForEdit();
-  //   }
-  // }, [id]);
+          const data = res.data as IProduct;
+          dispatch({
+            type: "CHANGE_INITIAL_STATE",
+            payload: {
+              title: data.title,
+              category: data.category,
+              price: data.price,
+              salePrice: data.salePrice || "",
+              cover: data.cover,
+              ingredients: data.ingredients || [""],
+              desc: data.desc || "",
+            },
+          });
+        } catch (err) {
+          console.log(err);
+          setErrorWrongId(true);
+        }
+      };
+      fetchProductForEdit();
+    }
+  }, [id]);
 
   const handleChange = ({ target }: THandleChange) => {
     dispatch({
@@ -140,19 +125,19 @@ const AddProductPage = () => {
     if (id) {
       e.preventDefault();
       editProductMutation.mutate(state);
-      setOpen(false);
+      setOpenModal(false);
       navigate("/products-admin");
     } else {
       e.preventDefault();
       createProductMutation.mutate(state);
-      setOpen(false);
+      setOpenModal(false);
       navigate("/products-admin");
     }
   };
 
   return (
     <main className={style.mainContainer}>
-      {!validatedProduct ? (
+      {errorWrongId ? (
         <ErrorModal
           errorMessage="Продукту з таким ID не існує"
           navigateUrl="/products-admin"
@@ -277,7 +262,7 @@ const AddProductPage = () => {
 
         <Button
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={() => setOpenModal(true)}
           disabled={
             state.title.length < 1 ||
             state.price.length < 1 ||
@@ -286,7 +271,7 @@ const AddProductPage = () => {
         >
           {id ? "Редагувати" : " Створити"}
         </Button>
-        <DialogModal isOpen={isOpen} onClose={() => setOpen(false)}>
+        <DialogModal isOpen={isOpenModal} onClose={() => setOpenModal(false)}>
           <ProductCardCreating
             title={state.title}
             category={state.category}
@@ -303,4 +288,4 @@ const AddProductPage = () => {
   );
 };
 
-export default AddProductPage;
+export default AddEditProductPage;

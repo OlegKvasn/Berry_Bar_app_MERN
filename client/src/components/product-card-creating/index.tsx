@@ -1,5 +1,6 @@
 import style from "./productCardCreating.module.scss";
 import { INITIAL_STATE } from "../../lib/product-reducer";
+import { category as categoryList } from "../../lib/data";
 
 type TInitialState = typeof INITIAL_STATE;
 
@@ -24,7 +25,9 @@ const ProductCardCreating = ({
       <div className={style.details}>
         <div className={style.price}>
           <span>Категорія</span>
-          <h2>{category}</h2>
+          <h2 className={style.cat}>
+            {categoryList.find(({ value }) => value === category)?.name}
+          </h2>
         </div>
         <div className={style.price}>
           <span>Ціна зі знижкою</span>

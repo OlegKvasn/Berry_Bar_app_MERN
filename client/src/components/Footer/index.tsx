@@ -2,7 +2,7 @@ import style from "./footer.module.scss";
 
 const Footer = () => {
   return (
-    <footer className={style.footer}>
+    <footer id="contacts" className={style.footer}>
       <div className={style.container}>
         <div className={style.top}>
           <div className={style.item}>

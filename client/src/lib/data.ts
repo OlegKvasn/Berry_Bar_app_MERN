@@ -24,3 +24,5 @@ export const category = [
     value: "drink",
   },
 ] as const;
+
+export const popular = ["Карбонара", "М'ясна", "Гавайська"] as const;

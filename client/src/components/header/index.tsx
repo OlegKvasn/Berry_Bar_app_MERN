@@ -45,7 +45,7 @@ const Navbar = () => {
             <Link to="/products">Меню</Link>
           </li>
           <li>
-            <Link to="/contacts">Контакти</Link>
+            <a href="#contacts">Контакти</a>
           </li>
           <li>
             <Link to="/cart">Корзина</Link>
@@ -87,7 +87,11 @@ const Navbar = () => {
           <hr />
           <section className={style.menu}>
             {category.map((cat) => (
-              <Link key={cat.value} className={style.menuLink} to="/">
+              <Link
+                key={cat.value}
+                className={style.menuLink}
+                to={`/products?category=${cat.value}`}
+              >
                 {cat.name}
               </Link>
             ))}

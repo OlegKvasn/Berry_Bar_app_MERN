@@ -3,6 +3,7 @@ import { baseURL } from "./utils";
 import { IProduct } from "./types";
 import { useEffect, useState } from "react";
 
+// not used
 export const useValidateProduct = (id: string | undefined) => {
   const [validProduct, setValidProduct] = useState<IProduct | undefined>(
     undefined

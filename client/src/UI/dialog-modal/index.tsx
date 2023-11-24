@@ -8,6 +8,7 @@ interface IButton extends React.ComponentProps<"dialog"> {
   title?: string;
   onClose: () => void;
   isOpen: boolean;
+  closeBtn?: boolean;
 }
 
 const DialogModal = ({
@@ -16,6 +17,7 @@ const DialogModal = ({
   title = "",
   onClose,
   isOpen,
+  closeBtn = true,
   ...props
 }: IButton) => {
   const dialogRef = useRef<null | HTMLDialogElement>(null);
@@ -43,7 +45,9 @@ const DialogModal = ({
         >
           <div className={style.title}>
             <p>{title}</p>
-            <CancelButton type="button" onClick={closeDialog} />
+            {closeBtn ? (
+              <CancelButton type="button" onClick={closeDialog} />
+            ) : null}
           </div>
           {children}
         </dialog>

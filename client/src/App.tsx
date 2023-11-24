@@ -14,7 +14,7 @@ import LoginPage from "./page/login";
 import HomePage from "./page/home";
 import RegisterPage from "./page/register";
 import OrdersPage from "./page/orders";
-import AddProductPage from "./page/add-product";
+import AddEditProductPage from "./page/add-edit-product";
 import CartPage from "./page/cart";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductsAdminPage from "./page/products-admin";
@@ -62,11 +62,11 @@ function App() {
         },
         {
           path: "/add-product",
-          element: <AddProductPage />,
+          element: <AddEditProductPage />,
         },
         {
-          path: "/add-product/:id",
-          element: <AddProductPage />,
+          path: "/edit-product/:id",
+          element: <AddEditProductPage />,
         },
         {
           path: "/product/:id",

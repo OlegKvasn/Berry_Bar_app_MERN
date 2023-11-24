@@ -1,6 +1,7 @@
 import { useState } from "react";
 import style from "./featured.module.scss";
 import { useNavigate } from "react-router-dom";
+import { popular } from "../../lib/data";
 
 const Featured = () => {
   const [input, setInput] = useState("");
@@ -22,16 +23,22 @@ const Featured = () => {
               <input
                 type="text"
                 placeholder="Знайди те, що хочеш скуштувати"
+                value={input}
                 onChange={(e) => setInput(e.target.value)}
               />
             </div>
             <button onClick={hadleSubmit}>Пошук</button>
           </div>
           <div className={style.popular}>
-            <span>Популярне:</span>
-            <button>Pizza</button>
-            <button>Burger</button>
-            <button>Суші</button>
+            <span>Популярні запити:</span>
+            {popular.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => navigate(`/products?search=${item}`)}
+              >
+                {item}
+              </button>
+            ))}
           </div>
         </div>
         <div className={style.right}>

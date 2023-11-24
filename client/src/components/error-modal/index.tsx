@@ -24,7 +24,11 @@ const ErrorModal = ({
 
   return (
     <>
-      <DialogModal isOpen={isOpen} onClose={() => setOpen(false)}>
+      <DialogModal
+        isOpen={isOpen}
+        onClose={() => setOpen(false)}
+        closeBtn={false}
+      >
         <p>{errorMessage}</p>
         <Button type="button" onClick={handleOk}>
           {navigateText}
