@@ -16,21 +16,18 @@ import RegisterPage from "./page/register";
 import OrdersPage from "./page/orders";
 import AddEditProductPage from "./page/add-edit-product";
 import CartPage from "./page/cart";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductsAdminPage from "./page/products-admin";
-
-const queryClient = new QueryClient();
 
 function App() {
   const Layout = () => {
     const { state } = useNavigation();
     return (
-      <QueryClientProvider client={queryClient}>
+      <>
         <Navbar />
         {state === "loading" ? <div role="loader">Loading</div> : null}
         <Outlet />
         <Footer />
-      </QueryClientProvider>
+      </>
     );
   };
 

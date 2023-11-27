@@ -1,26 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import "./global.scss";
-import { configureStore } from "@reduxjs/toolkit";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
-import counterReducer from "./page/testRedux/countersSlice.ts";
-import usersReducer from "./page/testRedux/usersSlice.ts";
+import { store } from "./lib/redux/store.ts";
+import "./global.scss";
 
-export const store = configureStore({
-  reducer: {
-    counters: counterReducer,
-    users: usersReducer,
-  },
-});
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </Provider>
   </React.StrictMode>
 );

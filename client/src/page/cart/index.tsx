@@ -1,7 +1,22 @@
 import { Link } from "react-router-dom";
 import style from "./cart.module.scss";
+import {
+  getCartProducts,
+  getTotalPrice,
+  removeFromCart,
+} from "../../lib/redux/cart-slice";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../lib/redux/store-hooks";
 
 const CartPage = () => {
+  const cartProducts = useSelector(getCartProducts);
+  const totalPrice = useSelector(getTotalPrice);
+  const dispatch = useAppDispatch();
+
+  const handleRemoveFromCart = (productId: string) => {
+    dispatch(removeFromCart(productId));
+  };
+
   return (
     <div className={style.cart}>
       <div className={style.title}>
@@ -21,103 +36,31 @@ const CartPage = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              <img
-                className={style.productImage}
-                src="https://images.pexels.com/photos/8100784/pexels-photo-8100784.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt="some image"
-              />
-            </td>
-            <td>PORK БУРГЕР</td>
-            <td>1</td>
-            <td>199 грн</td>
-            <td>
-              <img
-                className={style.delete}
-                src="/img/delete.png"
-                alt="delete"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <img
-                className={style.productImage}
-                src="https://images.pexels.com/photos/8100784/pexels-photo-8100784.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt="some image"
-              />
-            </td>
-            <td>PORK БУРГЕР</td>
-            <td>1</td>
-            <td>199 грн</td>
-            <td>
-              <img
-                className={style.delete}
-                src="/img/delete.png"
-                alt="delete"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <img
-                className={style.productImage}
-                src="https://images.pexels.com/photos/8100784/pexels-photo-8100784.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt="some image"
-              />
-            </td>
-            <td>PORK БУРГЕР</td>
-            <td>1</td>
-            <td>199 грн</td>
-            <td>
-              <img
-                className={style.delete}
-                src="/img/delete.png"
-                alt="delete"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <img
-                className={style.productImage}
-                src="https://images.pexels.com/photos/8100784/pexels-photo-8100784.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt="some image"
-              />
-            </td>
-            <td>PORK БУРГЕР</td>
-            <td>1</td>
-            <td>199 грн</td>
-            <td>
-              <img
-                className={style.delete}
-                src="/img/delete.png"
-                alt="delete"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <img
-                className={style.productImage}
-                src="https://images.pexels.com/photos/8100784/pexels-photo-8100784.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt="some image"
-              />
-            </td>
-            <td>PORK БУРГЕР</td>
-            <td>1</td>
-            <td>199 грн</td>
-            <td>
-              <img
-                className={style.delete}
-                src="/img/delete.png"
-                alt="delete"
-              />
-            </td>
-          </tr>
+          {cartProducts.map((product) => (
+            <tr key={product.productId}>
+              <td>
+                <img
+                  className={style.productImage}
+                  src={product.productImage}
+                  alt={product.productName}
+                />
+              </td>
+              <td>{product.productName}</td>
+              <td>{product.quantity}</td>
+              <td>{`${product.productPrice} грн`}</td>
+              <td>
+                <img
+                  onClick={() => handleRemoveFromCart(product.productId)}
+                  className={style.delete}
+                  src="/img/delete.png"
+                  alt="delete"
+                />
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
+      <h2>{`${totalPrice} грн`}</h2>
     </div>
   );
 };

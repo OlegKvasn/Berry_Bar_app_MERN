@@ -1,12 +1,13 @@
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../main";
+import { useSelector } from "react-redux";
 import {
   changeMaxLimit,
   changeMinLimit,
   changeCounter,
   addCounter,
-} from "./countersSlice";
+} from "../../lib/redux/countersSlice";
 import IntroduceYourself from "./IntroduceYourself";
+import { RootState } from "../../lib/redux/store";
+import { useAppDispatch } from "../../lib/redux/store-hooks";
 
 const TestRedux = () => {
   // Є два варінти отримати шматок state з глобального store:
@@ -16,7 +17,7 @@ const TestRedux = () => {
     (state: RootState) => state.counters
   );
   const { isSuperAdmin } = useSelector((state: RootState) => state.users);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <div className="App">

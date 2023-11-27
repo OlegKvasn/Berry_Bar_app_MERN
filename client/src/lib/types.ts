@@ -38,18 +38,17 @@ export interface IReview {
   updatedAt: string;
 }
 
+export interface IProductInCart {
+  productId: string;
+  productImage: string;
+  productName: string;
+  productPrice: number;
+  quantity: number;
+}
 export interface IOrder {
   _id: string;
   userId: string;
-  products: [
-    {
-      productId: string;
-      productImage: string;
-      productName: string;
-      productPrice: number;
-      quantity: number;
-    }
-  ];
+  products: IProductInCart[];
   orderNumber: number;
   totalPrice: number;
   delivery: string;

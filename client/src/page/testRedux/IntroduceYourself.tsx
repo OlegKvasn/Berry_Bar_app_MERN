@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setUserName } from "./usersSlice.ts";
+import { setUserName } from "../../lib/redux/usersSlice.ts";
 
 const IntroduceYourself = () => {
   const [name, setName] = useState("");

@@ -5,9 +5,12 @@ import { useParams } from "react-router-dom";
 import Reviews from "../../components/reviews";
 import { newRequest } from "../../lib/utils";
 import { IProduct } from "../../lib/types";
+import { useAppDispatch } from "../../lib/redux/store-hooks";
+import { addToCart } from "../../lib/redux/cart-slice";
 
 const ProductPage = () => {
   const { id } = useParams();
+  const dispatch = useAppDispatch();
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["product"],
@@ -16,6 +19,10 @@ const ProductPage = () => {
         return res.data as IProduct;
       }),
   });
+
+  const handleAddToCart = (product: IProduct) => {
+    dispatch(addToCart(product));
+  };
 
   return (
     <div className={style.product}>
@@ -59,7 +66,11 @@ const ProductPage = () => {
               <h3>{data?.title}</h3>
               <h2>{`${data?.price} ₴`}</h2>
             </div>
-            <button>Додати до замовлення</button>
+            {data ? (
+              <button onClick={() => handleAddToCart(data)}>
+                Додати до замовлення
+              </button>
+            ) : null}
           </div>
         </div>
       )}
