@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import style from "./cart.module.scss";
 import {
   getCartProducts,
@@ -7,23 +7,36 @@ import {
 } from "../../lib/redux/cart-slice";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../lib/redux/store-hooks";
+import DeleteButton from "../../UI/icon-button/delete";
+import { getCurrentUser } from "../../lib/utils";
+import Button from "../../UI/button";
 
 const CartPage = () => {
   const cartProducts = useSelector(getCartProducts);
   const totalPrice = useSelector(getTotalPrice);
   const dispatch = useAppDispatch();
+  const currentUser = getCurrentUser();
+  const navigate = useNavigate();
 
   const handleRemoveFromCart = (productId: string) => {
     dispatch(removeFromCart(productId));
+  };
+
+  const handleCheckOut = () => {
+    if (!currentUser._id) {
+      navigate("/login");
+    } else {
+      navigate("/check-out");
+    }
   };
 
   return (
     <div className={style.cart}>
       <div className={style.title}>
         <h1>Кошик</h1>
-        <Link to="/products">
-          <button>Оформити замовлення</button>
-        </Link>
+        <Button type="button" onClick={handleCheckOut}>
+          Оформити замовлення
+        </Button>
       </div>
       <table>
         <thead>
@@ -32,7 +45,6 @@ const CartPage = () => {
             <th>Назва</th>
             <th>Кількість</th>
             <th>Ціна</th>
-            <th>Видалити</th>
           </tr>
         </thead>
         <tbody>
@@ -45,15 +57,17 @@ const CartPage = () => {
                   alt={product.productName}
                 />
               </td>
-              <td>{product.productName}</td>
+              <td>
+                <Link to={`/product/${product.productId}`}>
+                  {product.productName}
+                </Link>
+              </td>
               <td>{product.quantity}</td>
               <td>{`${product.productPrice} грн`}</td>
-              <td>
-                <img
+              <td className={style.btn}>
+                <DeleteButton
+                  type="button"
                   onClick={() => handleRemoveFromCart(product.productId)}
-                  className={style.delete}
-                  src="/img/delete.png"
-                  alt="delete"
                 />
               </td>
             </tr>

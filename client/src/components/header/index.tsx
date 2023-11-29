@@ -1,14 +1,14 @@
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import style from "./navbar.module.scss";
 import { useEffect, useState } from "react";
-import { getCurrentUser, newRequest } from "../../lib/utils";
+import { getCurrentUser } from "../../lib/utils";
 import { category } from "../../lib/data";
+import AccountMenu from "../account-menu";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
-  const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
-  const navigate = useNavigate();
+  const currentUser = getCurrentUser();
 
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -18,18 +18,6 @@ const Navbar = () => {
     window.addEventListener("scroll", isActive);
     return () => window.removeEventListener("scroll", isActive);
   }, []);
-
-  const currentUser = getCurrentUser();
-
-  const handleLogout = async () => {
-    try {
-      await newRequest.post("/auth/logout");
-      localStorage.removeItem("currentUser");
-      navigate("/");
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   return (
     <header
@@ -62,24 +50,7 @@ const Navbar = () => {
               </button>
             </li>
           )}
-          {currentUser.username && (
-            <li className={style.user} onClick={() => setOpen(!open)}>
-              <img src={currentUser.img || "/img/noavatar.jpg"} alt="" />
-              <span>{currentUser?.username}</span>
-              {open && (
-                <div className={style.options}>
-                  {currentUser?.isAdmin && (
-                    <>
-                      <Link to="/add-product">Добавити новий продукт</Link>
-                      <Link to="/products-admin">Всі продукти</Link>
-                    </>
-                  )}
-                  <Link to="/orders">Замовлення</Link>
-                  <div onClick={handleLogout}>Вихід</div>
-                </div>
-              )}
-            </li>
-          )}
+          {currentUser.username ? <AccountMenu /> : null}
         </ul>
       </nav>
       {(active || pathname !== "/") && (

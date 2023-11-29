@@ -1,0 +1,52 @@
+.mainContainer {
+  display: flex;
+  justify-content: center;
+  .form {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    gap: 10px;
+    padding: 20px;
+    h3 {
+      color: #555;
+    }
+    label {
+      color: #c2bfbf;
+      font-size: 18px;
+    }
+    input,
+    select,
+    textarea {
+      padding: 20px;
+    }
+
+    select {
+      text-transform: capitalize;
+    }
+
+    .images {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .add {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+
+      input {
+        width: 80%;
+        height: 0;
+      }
+    }
+
+    .addedIngredients,
+    .addedImage {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  }
+}

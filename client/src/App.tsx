@@ -17,6 +17,7 @@ import OrdersPage from "./page/orders";
 import AddEditProductPage from "./page/add-edit-product";
 import CartPage from "./page/cart";
 import ProductsAdminPage from "./page/products-admin";
+import CheckOutPage from "./page/check-out";
 
 function App() {
   const Layout = () => {
@@ -48,6 +49,10 @@ function App() {
         {
           path: "/cart",
           element: <CartPage />,
+        },
+        {
+          path: "/check-out",
+          element: <CheckOutPage />,
         },
         {
           path: "/products",
