@@ -47,13 +47,25 @@ export interface IProductInCart {
 }
 export interface IOrder {
   _id: string;
-  userId: string;
+  userId?: string;
+  name: string;
+  phone: string;
+  email?: string;
+  address?: string;
   products: IProductInCart[];
   orderNumber: number;
   totalPrice: number;
   delivery: string;
+  deliveryTime?: string;
   paymentMethod: string;
-  orderStatus: "created" | "confirmed" | "completed";
+  comment?: string;
+  orderStatus:
+    | "created"
+    | "confirmed"
+    | "preparing"
+    | "delivering"
+    | "completed"
+    | "canceled";
   createdAt: string;
   updatedAt: string;
 }

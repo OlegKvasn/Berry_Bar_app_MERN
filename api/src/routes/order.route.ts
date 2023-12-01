@@ -1,7 +1,7 @@
 import express from "express";
 import {
   completeOrder,
-  confirmOrder,
+  updateOrder,
   createOrder,
   getAllOrders,
   getOrder,
@@ -11,11 +11,11 @@ import { verifyToken } from "../middleware/jwt";
 
 const router = express.Router();
 
-router.post("/", verifyToken, createOrder);
+router.post("/", createOrder);
 router.get("/", verifyToken, getAllOrders);
 router.get("/:userId", verifyToken, getUserOrders);
 router.get("/id/:orderId", verifyToken, getOrder);
-router.patch("/confirm/:orderId", verifyToken, confirmOrder);
+router.patch("/update/:orderId", verifyToken, updateOrder);
 router.patch("/complete/:orderId", verifyToken, completeOrder);
 
 export default router;

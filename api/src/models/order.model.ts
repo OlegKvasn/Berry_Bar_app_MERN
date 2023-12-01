@@ -4,7 +4,20 @@ const OrderSchema = new Schema(
   {
     userId: {
       type: String,
+    },
+    name: {
+      type: String,
       required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+    },
+    address: {
+      type: String,
     },
     products: {
       type: [
@@ -30,14 +43,27 @@ const OrderSchema = new Schema(
       type: String,
       required: true,
     },
+    deliveryTime: {
+      type: String,
+    },
     paymentMethod: {
       type: String,
       required: true,
     },
+    comment: {
+      type: String,
+    },
     orderStatus: {
       type: String,
       default: "created",
-      enum: ["created", "confirmed", "completed"],
+      enum: [
+        "created",
+        "confirmed",
+        "preparing",
+        "delivering",
+        "completed",
+        "canceled",
+      ],
     },
   },
   { timestamps: true }

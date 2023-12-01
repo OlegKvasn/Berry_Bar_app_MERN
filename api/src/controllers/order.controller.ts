@@ -16,11 +16,16 @@ export const createOrder: RequestHandler<
 > = async (req, res, next) => {
   const newOrder = new OrderModel({
     userId: req.auth.userId,
+    name: req.body.name,
+    phone: req.body.phone,
+    email: req.body.email,
+    address: req.body.address,
     products: req.body.products,
     orderNumber: req.body.orderNumber,
     totalPrice: req.body.totalPrice,
-    delivery: "самовивіз",
-    paymentMethod: "термінал",
+    delivery: req.body.delivery,
+    paymentMethod: req.body.paymentMethod,
+    comment: req.body.comment,
   });
 
   try {
@@ -96,18 +101,22 @@ export const getUserOrders: RequestHandler<
   }
 };
 
-export const confirmOrder: RequestHandler<
+export const updateOrder: RequestHandler<
   IRequestParams,
   unknown,
   Order,
   Authentication
 > = async (req, res, next) => {
   const orderId = req.params.orderId;
+  const confirmedAddress = req.body.address;
   const confirmedProducts = req.body.products;
   const confirmedTotalPrice = req.body.totalPrice;
   const confirmedDelivery = req.body.delivery;
   const confirmedPaymentMethod = req.body.paymentMethod;
-  const confirmedOrderStatus = "confirmed";
+  const confirmedComment = req.body.comment;
+  const confirmedDeliveryTime = req.body.deliveryTime;
+  const confirmedOrderStatus = req.body.orderStatus;
+
   try {
     if (!mongoose.isValidObjectId(orderId)) {
       throw createHttpError(400, "Invalid order id");
@@ -125,10 +134,13 @@ export const confirmOrder: RequestHandler<
       throw createHttpError(404, "Order not found");
     }
 
+    order.address = confirmedAddress;
     order.products = confirmedProducts;
     order.totalPrice = confirmedTotalPrice;
     order.delivery = confirmedDelivery;
     order.paymentMethod = confirmedPaymentMethod;
+    order.comment = confirmedComment;
+    order.deliveryTime = confirmedDeliveryTime;
     order.orderStatus = confirmedOrderStatus;
 
     const confirmedOrder = await order.save();
