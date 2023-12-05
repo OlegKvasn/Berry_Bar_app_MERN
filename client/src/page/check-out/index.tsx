@@ -49,8 +49,8 @@ const CheckOutPage = () => {
         paymentMethod: "Готівка",
         comment: "",
       },
-      mode: "onBlur",
-      reValidateMode: "onBlur",
+      mode: "onTouched",
+      //reValidateMode: "onBlur",
     });
 
   const disableAddress = watch("delivery") === "Самовивіз";

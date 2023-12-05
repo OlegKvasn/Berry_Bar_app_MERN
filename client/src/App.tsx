@@ -12,12 +12,13 @@ import ProductPage from "./page/product";
 // import { fetchProduct } from "./utils/fetchProduct";
 import LoginPage from "./page/login";
 import HomePage from "./page/home";
-import RegisterPage from "./page/register";
+//import RegisterPage from "./page/register";
 import OrdersPage from "./page/orders";
 import AddEditProductPage from "./page/add-edit-product";
 import CartPage from "./page/cart";
 import ProductsAdminPage from "./page/products-admin";
 import CheckOutPage from "./page/check-out";
+import RegisterHookFormPage from "./page/register-hook-form";
 
 function App() {
   const Layout = () => {
@@ -77,8 +78,12 @@ function App() {
         },
         {
           path: "/register",
-          element: <RegisterPage />,
+          element: <RegisterHookFormPage />,
         },
+        // {
+        //   path: "/register",
+        //   element: <RegisterPage />,
+        // },
         {
           path: "/login",
           element: <LoginPage />,
