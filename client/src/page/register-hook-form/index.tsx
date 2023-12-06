@@ -3,14 +3,80 @@ import style from "./register.module.scss";
 //import { useNavigate } from "react-router-dom";
 import { newRequest, upload } from "../../lib/utils";
 import { FieldErrors, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { IUser } from "../../lib/types";
+import { z } from "zod";
+import TextField from "@mui/material/TextField";
 
 type TFormValues = {
   username: string;
   email: string;
   password: string;
+  passwordConfirmation: string;
   phone: string;
   img: string;
+};
+
+const validationSchema = z.object({
+  username: z.string().nonempty("Їм'я користувача є обов'язковим"),
+  email: z
+    .string()
+    .nonempty("E-mail є обов'язковим")
+    .email("Неправильний E-mail формат"),
+  password: z.string().nonempty("Пароль повинен містити більше 5 символів"),
+});
+
+//TODO: Відредагувати BackEnd - users
+const emailValidation = async (value: string) => {
+  const data = (await newRequest.get(`/users${value}`)) as IUser;
+  return !data || "Користувач з таким E-mail вже зареєстрований";
+};
+
+const usernameFormField = {
+  required: {
+    value: true,
+    message: "Їм'я користувача є обов'язковим",
+  },
+};
+
+const emailFormField = {
+  pattern: {
+    value:
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+    message: "Неправильний email формат",
+  },
+  validate: {
+    emailAvailable: (fieldValue: string) => emailValidation(fieldValue),
+  },
+};
+
+const passwordFormField = {
+  minLength: {
+    value: 5,
+    message: "Пароль повинен містити більше 5 символів",
+  },
+};
+
+const passwordConfirmationFormField = {
+  required: {
+    value: true,
+    message: "Пароль не співпадає",
+  },
+  minLength: {
+    value: 5,
+    message: "Пароль повинен мати більше 5 символів",
+  },
+};
+
+const phoneFormField = {
+  required: {
+    value: true,
+    message: "Номер телефону є обов'язковим",
+  },
+  minLength: {
+    value: 5,
+    message: "Номер телефону повинен містити більше 5 цифр",
+  },
 };
 
 const RegisterHookFormPage = () => {
@@ -21,11 +87,13 @@ const RegisterHookFormPage = () => {
         username: "",
         email: "",
         password: "",
+        passwordConfirmation: "",
         phone: "",
         img: "",
       },
-      mode: "onBlur",
-      reValidateMode: "onBlur",
+      resolver: zodResolver(validationSchema),
+      mode: "onTouched",
+      //reValidateMode: "onBlur",
     });
   //const navigate = useNavigate();
 
@@ -33,14 +101,7 @@ const RegisterHookFormPage = () => {
     setFile(target.files![0]);
   };
 
-  //TODO: Відредагувати BackEnd - users
-  const emailValidation = async (value: string) => {
-    const data = (await newRequest.get(`/users${value}`)) as IUser;
-    return !data || "Користувач з таким E-mail вже зареєстрований";
-  };
-
   const onSubmit = async (data: TFormValues) => {
-    console.log(data);
     if (formState.isSubmitSuccessful) {
       // const url = await upload(file);
       // try {
@@ -50,6 +111,7 @@ const RegisterHookFormPage = () => {
       //   console.log(err);
       // }
       // reset();
+      console.log(data);
     }
     // navigate("/products-admin");
   };
@@ -60,65 +122,51 @@ const RegisterHookFormPage = () => {
 
   return (
     <div className={style.mainContainer}>
-      <form onSubmit={handleSubmit(onSubmit, onError)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit, onError)}>
         <h1>Реєстрація нового користувача</h1>
-        <label htmlFor="username">* Ім'я користувача</label>
-        <input
-          type="text"
+        <TextField
           id="username"
-          placeholder="ваше їм'я.."
-          {...register("username", {
-            required: {
-              value: true,
-              message: "Їм'я користувача є обов'язковим",
-            },
-          })}
+          label="Їм'я користувача"
+          variant="outlined"
+          {...register("username")}
+          error={!!formState.errors.username}
+          helperText={formState.errors.username?.message}
         />
-        <label htmlFor="email">E-mail</label>
-        <input
-          type="email"
+        <TextField
           id="email"
-          placeholder="E-mail"
-          {...register("email", {
-            pattern: {
-              value:
-                /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-              message: "неправильний email формат",
-            },
-            validate: {
-              emailAvailable: (fieldValue) => emailValidation(fieldValue),
-            },
-          })}
+          label="E-mail"
+          variant="outlined"
+          type="email"
+          {...register("email")}
+          error={!!formState.errors.email}
+          helperText={formState.errors.email?.message}
         />
-        <label htmlFor="password">Пароль</label>
-        <input
-          type="password"
+        <TextField
           id="password"
-          {...register("password", {
-            required: {
-              value: true,
-              message: "Придумайте пароль",
-            },
-          })}
-        />
-        {/* <label htmlFor="password">Password</label>
-        <input
-          name="password"
+          label="Пароль"
+          variant="outlined"
           type="password"
-          placeholder="..."
-          onChange={handleChange}
-        /> */}
-        <label htmlFor="phone">* Номер телефону</label>
-        <input
-          type="tel"
+          {...register("password")}
+          error={!!formState.errors.password}
+          helperText={formState.errors.password?.message}
+        />
+        <TextField
+          id="passwordConfirmation"
+          label="Підтвердіть пароль"
+          variant="outlined"
+          type="password"
+          {...register("passwordConfirmation")}
+          error={!!formState.errors.passwordConfirmation}
+          helperText={formState.errors.passwordConfirmation?.message}
+        />
+        <TextField
           id="phone"
-          placeholder="Номер телефону"
-          {...register("phone", {
-            required: {
-              value: true,
-              message: "Номер телефону є обов'язковим",
-            },
-          })}
+          label="* Номер телефону"
+          variant="outlined"
+          type="tel"
+          {...register("phone", phoneFormField)}
+          error={!!formState.errors.phone}
+          helperText={formState.errors.phone?.message}
         />
         <label htmlFor="img">Аватар</label>
         <input name="img" type="file" onChange={handleUpload} />

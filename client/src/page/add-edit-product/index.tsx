@@ -3,7 +3,7 @@ import { category } from "../../lib/data";
 import style from "./addProduct.module.scss";
 import { INITIAL_STATE, productReducer } from "../../lib/product-reducer";
 import { baseURL, newRequest, upload } from "../../lib/utils";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import Button from "../../UI/button";
 import CancelButton from "../../UI/icon-button/cancel";
 import DialogModal from "../../UI/dialog-modal";
@@ -101,23 +101,15 @@ const AddEditProductPage = () => {
 
   const navigate = useNavigate();
 
-  const queryClient = useQueryClient();
-
   const createProductMutation = useMutation({
     mutationFn: (newProduct: TInitialState) => {
       return newRequest.post("/products", newProduct);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["products"]);
     },
   });
 
   const editProductMutation = useMutation({
     mutationFn: (editProduct: TInitialState) => {
       return newRequest.patch(`/products/${id}`, editProduct);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["products"]);
     },
   });
 
