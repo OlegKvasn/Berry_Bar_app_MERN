@@ -1,3 +1,4 @@
+import createHttpError from "http-errors";
 import { Schema, model, InferSchemaType } from "mongoose";
 
 const UserSchema = new Schema(
@@ -5,7 +6,6 @@ const UserSchema = new Schema(
     username: {
       type: String,
       required: true,
-      unique: true,
     },
     email: {
       type: String,
@@ -21,10 +21,6 @@ const UserSchema = new Schema(
     },
     phone: {
       type: String,
-      required: true,
-    },
-    city: {
-      type: String,
     },
     address: {
       type: String,
@@ -36,6 +32,16 @@ const UserSchema = new Schema(
   },
   { timestamps: true }
 );
+
+UserSchema.statics.signup = async function (
+  username: string,
+  email: string,
+  password: string
+) {
+  if (!username || !email || !password) {
+    throw createHttpError(400, "User must have a username, email and password");
+  }
+};
 
 export type User = InferSchemaType<typeof UserSchema>;
 

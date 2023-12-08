@@ -4,7 +4,7 @@ import style from "./addProduct.module.scss";
 import { INITIAL_STATE, productReducer } from "../../lib/product-reducer";
 import { baseURL, newRequest, upload } from "../../lib/utils";
 import { useMutation } from "@tanstack/react-query";
-import Button from "../../UI/button";
+import CustomButton from "../../UI/button";
 import CancelButton from "../../UI/icon-button/cancel";
 import DialogModal from "../../UI/dialog-modal";
 import ProductCardCreating from "../../components/product-card-creating";
@@ -194,9 +194,13 @@ const AddEditProductPage = () => {
               name="images"
               onChange={(e) => setFiles(e.target.files!)}
             /> */}
-          <Button type="button" onClick={handleUpload} disabled={uploaded}>
+          <CustomButton
+            type="button"
+            onClick={handleUpload}
+            disabled={uploaded}
+          >
             {uploaded ? "Фото Завантажено" : "Завантажити"}
-          </Button>
+          </CustomButton>
         </div>
         {state.cover.length > 0 ? (
           <div className={style.addedImage}>
@@ -214,9 +218,9 @@ const AddEditProductPage = () => {
             onChange={(e) => setIngredient(e.target.value)}
             value={ingredient}
           />
-          <Button type="button" onClick={handleAddIngredient}>
+          <CustomButton type="button" onClick={handleAddIngredient}>
             додати
-          </Button>
+          </CustomButton>
         </div>
         <div className={style.addedIngredients}>
           {state.ingredients.map((ing, index) => (
@@ -252,7 +256,7 @@ const AddEditProductPage = () => {
         />
         <p>* Продукт повинен містити Назву, Ціну та Зображення</p>
 
-        <Button
+        <CustomButton
           type="button"
           onClick={() => setOpenModal(true)}
           disabled={
@@ -262,7 +266,7 @@ const AddEditProductPage = () => {
           }
         >
           {id ? "Редагувати" : " Створити"}
-        </Button>
+        </CustomButton>
         <DialogModal isOpen={isOpenModal} onClose={() => setOpenModal(false)}>
           <ProductCardCreating
             title={state.title}
@@ -273,7 +277,7 @@ const AddEditProductPage = () => {
             salePrice={state.salePrice}
             price={state.price}
           />
-          <Button type="submit">Підтвердити</Button>
+          <CustomButton type="submit">Підтвердити</CustomButton>
         </DialogModal>
       </form>
     </main>

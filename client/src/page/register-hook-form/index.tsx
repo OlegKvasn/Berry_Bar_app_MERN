@@ -1,119 +1,75 @@
-import { useState } from "react";
 import style from "./register.module.scss";
-//import { useNavigate } from "react-router-dom";
-import { newRequest, upload } from "../../lib/utils";
+import { useNavigate } from "react-router-dom";
+import { newRequest } from "../../lib/utils";
 import { FieldErrors, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IUser } from "../../lib/types";
 import { z } from "zod";
 import TextField from "@mui/material/TextField";
+import CustomButton from "../../UI/button";
+import { AxiosError } from "axios";
+import { useState } from "react";
 
 type TFormValues = {
   username: string;
   email: string;
   password: string;
-  passwordConfirmation: string;
+  passwordConfirm: string;
   phone: string;
-  img: string;
 };
 
-const validationSchema = z.object({
-  username: z.string().nonempty("Їм'я користувача є обов'язковим"),
-  email: z
-    .string()
-    .nonempty("E-mail є обов'язковим")
-    .email("Неправильний E-mail формат"),
-  password: z.string().nonempty("Пароль повинен містити більше 5 символів"),
-});
-
-//TODO: Відредагувати BackEnd - users
-const emailValidation = async (value: string) => {
-  const data = (await newRequest.get(`/users${value}`)) as IUser;
-  return !data || "Користувач з таким E-mail вже зареєстрований";
-};
-
-const usernameFormField = {
-  required: {
-    value: true,
-    message: "Їм'я користувача є обов'язковим",
-  },
-};
-
-const emailFormField = {
-  pattern: {
-    value:
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-    message: "Неправильний email формат",
-  },
-  validate: {
-    emailAvailable: (fieldValue: string) => emailValidation(fieldValue),
-  },
-};
-
-const passwordFormField = {
-  minLength: {
-    value: 5,
-    message: "Пароль повинен містити більше 5 символів",
-  },
-};
-
-const passwordConfirmationFormField = {
-  required: {
-    value: true,
+const validationSchema = z
+  .object({
+    username: z.string().min(1, { message: "Їм'я користувача є обов'язковим" }),
+    email: z
+      .string()
+      .min(1, { message: "E-mail є обов'язковим" })
+      .email("Неправильний E-mail формат"),
+    password: z
+      .string()
+      .min(5, { message: "Пароль повинен містити більше 5 символів" }),
+    passwordConfirm: z.string(),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
     message: "Пароль не співпадає",
-  },
-  minLength: {
-    value: 5,
-    message: "Пароль повинен мати більше 5 символів",
-  },
-};
-
-const phoneFormField = {
-  required: {
-    value: true,
-    message: "Номер телефону є обов'язковим",
-  },
-  minLength: {
-    value: 5,
-    message: "Номер телефону повинен містити більше 5 цифр",
-  },
-};
+    path: ["passwordConfirm"],
+  });
 
 const RegisterHookFormPage = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const { register, handleSubmit, formState, reset, control } =
-    useForm<TFormValues>({
-      defaultValues: {
-        username: "",
-        email: "",
-        password: "",
-        passwordConfirmation: "",
-        phone: "",
-        img: "",
-      },
-      resolver: zodResolver(validationSchema),
-      mode: "onTouched",
-      //reValidateMode: "onBlur",
-    });
-  //const navigate = useNavigate();
+  const [responseErrorMessage, setResponseErrorMessage] = useState<
+    string | null
+  >(null);
 
-  const handleUpload = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(target.files![0]);
-  };
+  const { register, handleSubmit, formState } = useForm<TFormValues>({
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+      phone: "",
+    },
+    resolver: zodResolver(validationSchema),
+    mode: "onTouched",
+  });
+  const navigate = useNavigate();
 
-  const onSubmit = async (data: TFormValues) => {
+  const onSubmit = async (submitData: TFormValues) => {
     if (formState.isSubmitSuccessful) {
-      // const url = await upload(file);
-      // try {
-      //   await newRequest.post("/auth/register", { ...values, img: url });
-      //   navigate("/");
-      // } catch (err) {
-      //   console.log(err);
-      // }
-      // reset();
-      console.log(data);
+      try {
+        await newRequest.post("/auth/register", submitData);
+        const email = submitData.email;
+        const password = submitData.password;
+        const res = await newRequest.post("/auth/login", { email, password });
+        localStorage.setItem("currentUser", JSON.stringify(res.data));
+        navigate("/");
+      } catch (err) {
+        let message = "Щось пішло не так";
+
+        if (err instanceof AxiosError) {
+          message = err.response?.data.error || "Помилка сервера";
+        }
+        setResponseErrorMessage(message);
+      }
     }
-    // navigate("/products-admin");
   };
 
   const onError = (errors: FieldErrors<TFormValues>) => {
@@ -126,7 +82,7 @@ const RegisterHookFormPage = () => {
         <h1>Реєстрація нового користувача</h1>
         <TextField
           id="username"
-          label="Їм'я користувача"
+          label="* Їм'я"
           variant="outlined"
           {...register("username")}
           error={!!formState.errors.username}
@@ -134,7 +90,7 @@ const RegisterHookFormPage = () => {
         />
         <TextField
           id="email"
-          label="E-mail"
+          label="* E-mail"
           variant="outlined"
           type="email"
           {...register("email")}
@@ -143,7 +99,7 @@ const RegisterHookFormPage = () => {
         />
         <TextField
           id="password"
-          label="Пароль"
+          label="* Пароль"
           variant="outlined"
           type="password"
           {...register("password")}
@@ -152,30 +108,31 @@ const RegisterHookFormPage = () => {
         />
         <TextField
           id="passwordConfirmation"
-          label="Підтвердіть пароль"
+          label="* Підтвердіть пароль"
           variant="outlined"
           type="password"
-          {...register("passwordConfirmation")}
-          error={!!formState.errors.passwordConfirmation}
-          helperText={formState.errors.passwordConfirmation?.message}
+          {...register("passwordConfirm")}
+          error={!!formState.errors.passwordConfirm}
+          helperText={formState.errors.passwordConfirm?.message}
         />
         <TextField
           id="phone"
-          label="* Номер телефону"
+          label="Номер телефону"
           variant="outlined"
           type="tel"
-          {...register("phone", phoneFormField)}
+          {...register("phone")}
           error={!!formState.errors.phone}
           helperText={formState.errors.phone?.message}
         />
-        <label htmlFor="img">Аватар</label>
-        <input name="img" type="file" onChange={handleUpload} />
-        <button
-          type="submit"
-          disabled={!formState.isDirty || formState.isSubmitting}
-        >
-          Зареєструватися
-        </button>
+        {responseErrorMessage ? (
+          <p className={style.error}>
+            {responseErrorMessage === "Email already in use"
+              ? "За цим E-mail вже зареєстровано користувача"
+              : responseErrorMessage}
+          </p>
+        ) : null}
+        <CustomButton type="submit">Зареєструватися</CustomButton>
+        <p>* Обов'язкові поля</p>
       </form>
     </div>
   );

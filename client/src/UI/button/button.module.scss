@@ -2,7 +2,7 @@
   background-color: var(--green-color);
   margin: 20px 0;
   padding: 10px;
-  color: #000000;
+  color: var(--gray-color);
   border: 1px solid var(--green-color);
   font-weight: 500;
   font-size: 18px;
@@ -10,7 +10,6 @@
   transition: all 0.5s ease;
   text-transform: capitalize;
   &:disabled {
-    color: #fff;
     opacity: 0.5;
     background-color: transparent;
     cursor: default;

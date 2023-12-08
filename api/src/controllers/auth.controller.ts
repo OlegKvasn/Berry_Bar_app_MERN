@@ -7,17 +7,17 @@ import env from ".././utils/validateEnv";
 
 export const register: RequestHandler = async (req, res, next) => {
   try {
-    if (
-      !req.body.username ||
-      !req.body.email ||
-      !req.body.password ||
-      !req.body.phone ||
-      !req.body.city
-    ) {
+    if (!req.body.username || !req.body.email || !req.body.password) {
       throw createHttpError(
         400,
-        "User must have a username, email, password, phone and city"
+        "User must have a username, email and password"
       );
+    }
+
+    const exists = await UserModel.findOne({ email: req.body.email });
+
+    if (exists) {
+      throw createHttpError(400, "Email already in use");
     }
 
     const hash = bcrypt.hashSync(req.body.password, 5);
@@ -34,7 +34,7 @@ export const register: RequestHandler = async (req, res, next) => {
 
 export const login: RequestHandler = async (req, res, next) => {
   try {
-    const user = await UserModel.findOne({ username: req.body.username });
+    const user = await UserModel.findOne({ email: req.body.email });
     if (!user) {
       throw createHttpError(404, "User not found");
     }

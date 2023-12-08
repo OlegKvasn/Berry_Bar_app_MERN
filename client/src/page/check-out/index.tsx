@@ -29,6 +29,32 @@ type TFormValues = {
   comment: string;
 };
 
+const nameFormField = {
+  required: {
+    value: true,
+    message: "Їм'я є обов'язковим полем",
+  },
+};
+
+const emailFormField = {
+  pattern: {
+    value:
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+    message: "Неправильний email формат",
+  },
+};
+
+const phoneFormField = {
+  required: {
+    value: true,
+    message: "Номер телефону є обов'язковим полем",
+  },
+  minLength: {
+    value: 10,
+    message: "Невірний номер телефону",
+  },
+};
+
 const CheckOutPage = () => {
   const [isOpenModal, setOpenModal] = useState(false);
   const currentUser = getCurrentUser();
@@ -92,13 +118,8 @@ const CheckOutPage = () => {
         <input
           type="text"
           id="username"
-          placeholder="Їм'я користувача"
-          {...register("name", {
-            required: {
-              value: true,
-              message: "Їм'я користувача є обов'язковим",
-            },
-          })}
+          placeholder="Їм'я"
+          {...register("name", nameFormField)}
         />
         <p>{formState.errors.name?.message}</p>
         <label htmlFor="phone">* Номер телефону</label>
@@ -106,12 +127,7 @@ const CheckOutPage = () => {
           type="tel"
           id="phone"
           placeholder="Номер телефону"
-          {...register("phone", {
-            required: {
-              value: true,
-              message: "Номер телефону є обов'язковим",
-            },
-          })}
+          {...register("phone", phoneFormField)}
         />
         <p>{formState.errors.phone?.message}</p>
         <label htmlFor="email">E-mail</label>
@@ -119,13 +135,7 @@ const CheckOutPage = () => {
           type="email"
           id="email"
           placeholder="E-mail"
-          {...register("email", {
-            pattern: {
-              value:
-                /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-              message: "неправильний email формат",
-            },
-          })}
+          {...register("email", emailFormField)}
         />
         <label htmlFor="delivery">Спосіб отримання</label>
         <select id="delivery" {...register("delivery")}>

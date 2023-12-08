@@ -3,8 +3,7 @@ export interface IUser {
   username: string;
   email: string;
   password: string;
-  phone: string;
-  city: string;
+  phone?: string;
   isAdmin: string;
   img?: string;
   address?: string;

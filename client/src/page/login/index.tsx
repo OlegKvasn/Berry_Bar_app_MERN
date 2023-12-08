@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { newRequest } from "../../lib/utils";
 
 const initialValues = {
-  username: "",
+  email: "",
   password: "",
 };
 
@@ -21,9 +21,9 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      const username = values.username;
+      const email = values.email;
       const password = values.password;
-      const res = await newRequest.post("/auth/login", { username, password });
+      const res = await newRequest.post("/auth/login", { email, password });
       localStorage.setItem("currentUser", JSON.stringify(res.data));
       navigate("/");
     } catch (err) {
@@ -36,11 +36,11 @@ const LoginPage = () => {
     <div className={style.mainContainer}>
       <form onSubmit={nandleSubmit}>
         <h1>Вхід</h1>
-        <label htmlFor="username">Їм'я користувача</label>
+        <label htmlFor="email">E-mail</label>
         <input
-          name="username"
-          type="text"
-          placeholder="your name..."
+          name="email"
+          type="email"
+          placeholder="ваш email"
           onChange={handleChange}
         />
         <label htmlFor="password">Пароль</label>
