@@ -8,14 +8,14 @@ import {
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../lib/redux/store-hooks";
 import DeleteButton from "../../UI/icon-button/delete";
-import { getCurrentUser } from "../../lib/utils";
+//import { getCurrentUser } from "../../lib/utils";
 import Button from "../../UI/button";
 
 const CartPage = () => {
   const cartProducts = useSelector(getCartProducts);
   const totalPrice = useSelector(getTotalPrice);
   const dispatch = useAppDispatch();
-  const currentUser = getCurrentUser();
+  //const currentUser = getCurrentUser();
   const navigate = useNavigate();
 
   const handleRemoveFromCart = (productId: string) => {
@@ -23,11 +23,11 @@ const CartPage = () => {
   };
 
   const handleCheckOut = () => {
-    if (!currentUser._id) {
-      navigate("/login");
-    } else {
-      navigate("/check-out");
-    }
+    // if (!currentUser._id) {
+    //   navigate("/login");
+    // } else {
+    navigate("/check-out");
+    //}
   };
 
   return (

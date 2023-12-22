@@ -2,55 +2,96 @@ import { useState } from "react";
 import style from "./login.module.scss";
 import { useNavigate } from "react-router-dom";
 import { newRequest } from "../../lib/utils";
+import { AxiosError } from "axios";
+import TextField from "@mui/material/TextField";
+import CustomButton from "../../UI/button";
+import { FieldErrors, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
-const initialValues = {
-  email: "",
-  password: "",
+type TFormValues = {
+  email: string;
+  password: string;
 };
 
-const LoginPage = () => {
-  const [values, setValues] = useState(initialValues);
-  // const [error, setError] = useState(null)
-  const navigate = useNavigate();
+const validationSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: "Введіть ваш E-mail" })
+    .email("Неправильний E-mail формат"),
+  password: z.string().min(1, { message: "Введіть пароль" }),
+});
 
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [target.name]: target.value });
+const LoginPage = () => {
+  const navigate = useNavigate();
+  const [responseErrorMessage, setResponseErrorMessage] = useState<
+    string | null
+  >(null);
+
+  const { register, handleSubmit, formState } = useForm<TFormValues>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: zodResolver(validationSchema),
+    mode: "onTouched",
+  });
+
+  const onSubmit = async (submitData: TFormValues) => {
+    if (formState.isSubmitSuccessful) {
+      try {
+        const email = submitData.email;
+        const password = submitData.password;
+        const res = await newRequest.post("/auth/login", { email, password });
+        localStorage.setItem("currentUser", JSON.stringify(res.data));
+        navigate("/");
+      } catch (err) {
+        let message = "Щось пішло не так";
+
+        if (err instanceof AxiosError) {
+          message = err.response?.data.error || "Помилка сервера";
+        }
+        setResponseErrorMessage(message);
+      }
+    }
   };
 
-  const nandleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      const email = values.email;
-      const password = values.password;
-      const res = await newRequest.post("/auth/login", { email, password });
-      localStorage.setItem("currentUser", JSON.stringify(res.data));
-      navigate("/");
-    } catch (err) {
-      // setError(err);
-      console.log(err);
-    }
+  const onError = (errors: FieldErrors<TFormValues>) => {
+    console.log(errors);
   };
 
   return (
     <div className={style.mainContainer}>
-      <form onSubmit={nandleSubmit}>
+      <form noValidate onSubmit={handleSubmit(onSubmit, onError)}>
         <h1>Вхід</h1>
-        <label htmlFor="email">E-mail</label>
-        <input
-          name="email"
+        <TextField
+          id="email"
+          label="* E-mail"
+          variant="outlined"
           type="email"
-          placeholder="ваш email"
-          onChange={handleChange}
+          {...register("email")}
+          error={!!formState.errors.email}
+          helperText={formState.errors.email?.message}
         />
-        <label htmlFor="password">Пароль</label>
-        <input
-          name="password"
+        <TextField
+          id="password"
+          label="* Пароль"
+          variant="outlined"
           type="password"
-          placeholder="..."
-          onChange={handleChange}
+          {...register("password")}
+          error={!!formState.errors.password}
+          helperText={formState.errors.password?.message}
         />
-        <button type="submit">Вхід</button>
+        {responseErrorMessage ? (
+          <p className={style.error}>
+            {responseErrorMessage === "Wrong password or username"
+              ? "Неправильний пароль"
+              : responseErrorMessage === "User not found"
+              ? "За цим E-mail немає зареєстрованого користувача"
+              : responseErrorMessage}
+          </p>
+        ) : null}
+        <CustomButton type="submit">Вхід</CustomButton>
       </form>
     </div>
   );
