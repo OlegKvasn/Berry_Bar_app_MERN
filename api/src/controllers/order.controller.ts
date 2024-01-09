@@ -15,7 +15,7 @@ export const createOrder: RequestHandler<
   Authentication
 > = async (req, res, next) => {
   const newOrder = new OrderModel({
-    userId: req.auth.userId,
+    userId: req.body.userId,
     name: req.body.name,
     phone: req.body.phone,
     email: req.body.email,
@@ -52,6 +52,20 @@ export const getAllOrders: RequestHandler<
   try {
     const orders = await OrderModel.find().exec();
     res.status(200).json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getLastOrder: RequestHandler<
+  IRequestParams,
+  unknown,
+  Order,
+  Authentication
+> = async (req, res, next) => {
+  try {
+    const order = await OrderModel.findOne().sort("-_id");
+    res.status(200).json(order);
   } catch (error) {
     next(error);
   }

@@ -17,7 +17,12 @@ const OrderSchema = new Schema(
       type: String,
     },
     address: {
-      type: String,
+      type: {
+        city: String,
+        street: String,
+        apartment: String,
+        portal: String,
+      },
     },
     products: {
       type: [

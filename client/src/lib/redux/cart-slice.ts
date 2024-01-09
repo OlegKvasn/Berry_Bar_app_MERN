@@ -51,6 +51,10 @@ const cartSlice = createSlice({
         return state.filter((product) => product.productId !== action.payload);
       }
     },
+    clearCart: () => {
+      setLocalStorage([]);
+      return initialState;
+    },
   },
 });
 
@@ -64,6 +68,6 @@ export const getTotalProducts = (state: RootState) =>
   state.cart.reduce((acc, next) => (acc += next.quantity), 0);
 
 // Action creators are generated for each case reducer function
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

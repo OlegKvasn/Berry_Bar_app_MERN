@@ -45,26 +45,31 @@ export interface IProductInCart {
   quantity: number;
 }
 export interface IOrder {
-  _id: string;
+  _id?: string;
   userId?: string;
   name: string;
   phone: string;
   email?: string;
-  address?: string;
+  address?: {
+    city: "Петропавлівська Борщагівка" | "Софіївська Борщагівка";
+    street: string;
+    apartment: string;
+    portal: string;
+  };
   products: IProductInCart[];
   orderNumber: number;
   totalPrice: number;
-  delivery: string;
+  delivery: "Самовивіз" | "Доставка додому";
   deliveryTime?: string;
-  paymentMethod: string;
+  paymentMethod: "Готівка" | "Оплата картою";
   comment?: string;
-  orderStatus:
+  orderStatus?:
     | "created"
     | "confirmed"
     | "preparing"
     | "delivering"
     | "completed"
     | "canceled";
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

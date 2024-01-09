@@ -8,7 +8,11 @@ import "./global.scss";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./lib/MUI-theme.ts";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { refetchOnWindowFocus: false }, // deactivate refetch when changing tab in browser
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

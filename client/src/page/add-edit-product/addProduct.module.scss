@@ -8,10 +8,10 @@
     gap: 10px;
     padding: 20px;
     h3 {
-      color: #555;
+      color: var(--gray-color);
     }
     label {
-      color: #c2bfbf;
+      color: var(--gray-color-2);
       font-size: 18px;
     }
     input,
@@ -47,6 +47,11 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
+      gap: 2px;
+      .productImage {
+        height: 250px;
+        object-fit: cover;
+      }
     }
   }
 }

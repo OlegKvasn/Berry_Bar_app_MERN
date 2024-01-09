@@ -1,33 +1,26 @@
 import { useState } from "react";
 import style from "./check-out.module.scss";
-import { getCurrentUser } from "../../lib/utils";
-//import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { getCurrentUser, newRequest } from "../../lib/utils";
+import { useMutation } from "@tanstack/react-query";
 import Button from "../../UI/button";
 import DialogModal from "../../UI/dialog-modal";
 //import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getTotalPrice } from "../../lib/redux/cart-slice";
+import {
+  clearCart,
+  getCartProducts,
+  getTotalPrice,
+} from "../../lib/redux/cart-slice";
 import { FieldErrors, useForm } from "react-hook-form";
-import { DevTool } from "@hookform/devtools";
-//import InputLabel from "@mui/material/InputLabel";
-//import MenuItem from "@mui/material/MenuItem";
-//import FormControl from "@mui/material/FormControl";
-//import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { IOrder } from "../../lib/types";
+import { useAppDispatch } from "../../lib/redux/store-hooks";
+import { AxiosError } from "axios";
 
-type TFormValues = {
-  name: string;
-  phone: string;
-  email: string;
-  address: {
-    city: "Петропавлівська Борщагівка" | "Софіївська Борщагівка";
-    street: string;
-    apartment: string;
-    portal: string;
-  };
-  delivery: "Самовивіз" | "Доставка додому";
-  paymentMethod: "Готівка" | "Оплата картою";
-  comment: string;
-};
+type TFormValues = Omit<IOrder, "products" | "orderNumber" | "totalPrice">;
 
 const nameFormField = {
   required: {
@@ -57,52 +50,67 @@ const phoneFormField = {
 
 const CheckOutPage = () => {
   const [isOpenModal, setOpenModal] = useState(false);
+  const [mutationErrorMessage, setMutationErrorMessage] = useState<
+    string | null
+  >(null);
   const currentUser = getCurrentUser();
+  const cartProducts = useSelector(getCartProducts);
   const totalPrice = useSelector(getTotalPrice);
-  const { register, handleSubmit, formState, watch, reset, control } =
-    useForm<TFormValues>({
-      defaultValues: {
-        name: currentUser.username ? currentUser.username : "",
-        phone: currentUser.phone ? currentUser.phone : "",
-        email: currentUser.email ? currentUser.email : "",
-        address: {
-          city: "Петропавлівська Борщагівка",
-          street: "",
-          apartment: "",
-          portal: "",
-        },
-        delivery: "Самовивіз",
-        paymentMethod: "Готівка",
-        comment: "",
+  const dispatch = useAppDispatch();
+  const { register, handleSubmit, formState, watch } = useForm({
+    defaultValues: {
+      name: currentUser.username ? currentUser.username : "",
+      phone: currentUser.phone ? currentUser.phone : "",
+      email: currentUser.email ? currentUser.email : "",
+      address: {
+        city: "Петропавлівська Борщагівка",
+        street: "",
+        apartment: "",
+        portal: "",
       },
-      mode: "onTouched",
-      //reValidateMode: "onBlur",
-    });
+      delivery: "Самовивіз",
+      paymentMethod: "Готівка",
+      comment: "",
+    } satisfies TFormValues,
+    mode: "onTouched",
+    //reValidateMode: "onBlur",
+  });
 
   const disableAddress = watch("delivery") === "Самовивіз";
 
   // const navigate = useNavigate();
 
-  //const queryClient = useQueryClient();
+  const { mutate: createOrder, status: creationStatus } = useMutation({
+    mutationFn: (newOrder: IOrder) => {
+      return newRequest.post("/orders", newOrder);
+    },
+    onSuccess: () => {
+      setOpenModal(false);
+      dispatch(clearCart());
+      // navigate("/products-admin");
+    },
+    onError: (err) => {
+      let message = "Щось пішло не так";
 
-  // const createProductMutation = useMutation({
-  //   mutationFn: (newProduct: TInitialState) => {
-  //     return newRequest.post("/products", newProduct);
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries(["products"]);
-  //   },
-  // });
+      if (err instanceof AxiosError) {
+        message = err.response?.data.error || "Помилка сервера";
+      }
+      setMutationErrorMessage(message);
+    },
+  });
 
-  const onSubmit = (data: TFormValues) => {
-    console.log(data);
-
-    // createProductMutation.mutate(state);
-    setOpenModal(true);
+  const onSubmit = async (formData: TFormValues) => {
     if (formState.isSubmitSuccessful) {
-      reset();
+      const res = await newRequest.get("/orders/last");
+      const lastOrder = res.data as IOrder;
+      createOrder({
+        ...formData,
+        userId: currentUser._id || "Unregistered",
+        products: cartProducts,
+        totalPrice,
+        orderNumber: lastOrder.orderNumber + 1,
+      });
     }
-    // navigate("/products-admin");
   };
 
   const onError = (errors: FieldErrors<TFormValues>) => {
@@ -114,51 +122,71 @@ const CheckOutPage = () => {
       <form className={style.form} onSubmit={handleSubmit(onSubmit, onError)}>
         <h3>Оформлення замовлення</h3>
         <p>{`Цінна замовлення: ${totalPrice} грн`}</p>
-        <label htmlFor="username">* Їм'я користувача</label>
+        <label htmlFor="username" className={style.label}>
+          * Їм'я користувача
+        </label>
         <input
           type="text"
           id="username"
           placeholder="Їм'я"
           {...register("name", nameFormField)}
         />
-        <p>{formState.errors.name?.message}</p>
-        <label htmlFor="phone">* Номер телефону</label>
+        <p className={style.error}>{formState.errors.name?.message}</p>
+        <label htmlFor="phone" className={style.label}>
+          * Номер телефону
+        </label>
         <input
           type="tel"
           id="phone"
           placeholder="Номер телефону"
           {...register("phone", phoneFormField)}
         />
-        <p>{formState.errors.phone?.message}</p>
-        <label htmlFor="email">E-mail</label>
+        <p className={style.error}>{formState.errors.phone?.message}</p>
+        <label htmlFor="email" className={style.label}>
+          E-mail
+        </label>
         <input
           type="email"
           id="email"
           placeholder="E-mail"
           {...register("email", emailFormField)}
         />
-        <label htmlFor="delivery">Спосіб отримання</label>
-        <select id="delivery" {...register("delivery")}>
-          <option>Самовивіз</option>
-          <option>Доставка додому</option>
-        </select>
-        <p>{formState.errors.email?.message}</p>
-
+        <FormControl fullWidth sx={{ mt: 2 }} variant="outlined">
+          <InputLabel id="delivery">Спосіб отримання</InputLabel>
+          <Select
+            defaultValue="Самовивіз"
+            labelId="delivery"
+            id="delivery"
+            label="Спосіб отримання"
+            {...register("delivery")}
+          >
+            <MenuItem value="Самовивіз">Самовивіз</MenuItem>
+            <MenuItem value="Доставка додому">Доставка додому</MenuItem>
+          </Select>
+        </FormControl>
         {!disableAddress ? (
           <>
-            <label htmlFor="city">Місто</label>
-            <select
-              id="city"
-              {...register("address.city", {
-                //disabled: disableAddress,
-              })}
-            >
-              <option>Петропавлівська Борщагівка</option>
-              <option>Софіївська Борщагівка</option>
-            </select>
+            <FormControl fullWidth sx={{ mt: 2 }} variant="outlined">
+              <InputLabel id="city">Населений пункт</InputLabel>
+              <Select
+                labelId="city"
+                id="city"
+                label="Населений пункт"
+                {...register("address.city")}
+              >
+                <MenuItem value="Петропавлівська Борщагівка">
+                  Петропавлівська Борщагівка
+                </MenuItem>
+                <MenuItem value="Софіївська Борщагівка">
+                  Софіївська Борщагівка
+                </MenuItem>
+              </Select>
+            </FormControl>
             <div className={style.address}>
               <div>
-                <label htmlFor="street">Вулиця і номер будинку</label>
+                <label htmlFor="street" className={style.label}>
+                  Вулиця і номер будинку
+                </label>
                 <input
                   type="text"
                   id="street"
@@ -168,7 +196,9 @@ const CheckOutPage = () => {
                 />
               </div>
               <div>
-                <label htmlFor="apartment">Квартира</label>
+                <label htmlFor="apartment" className={style.label}>
+                  Квартира
+                </label>
                 <input
                   type="text"
                   id="apartment"
@@ -176,7 +206,9 @@ const CheckOutPage = () => {
                 />
               </div>
               <div>
-                <label htmlFor="portal">Під'їзд</label>
+                <label htmlFor="portal" className={style.label}>
+                  Під'їзд
+                </label>
                 <input
                   type="text"
                   id="portal"
@@ -186,24 +218,22 @@ const CheckOutPage = () => {
             </div>
           </>
         ) : null}
-        <label htmlFor="paymentMethod">Спосіб оплати</label>
-        <select id="paymentMethod" {...register("paymentMethod")}>
-          <option>Готівка</option>
-          <option>Оплата картою</option>
-        </select>
-        {/* <FormControl fullWidth>
+        <FormControl fullWidth sx={{ mt: 2 }} variant="outlined">
           <InputLabel id="paymentMethod">Тип оплати</InputLabel>
           <Select
             labelId="paymentMethod"
             id="paymentMethod"
-            label="Age"
+            label="Тип оплати"
+            defaultValue="Готівка"
             {...register("paymentMethod")}
           >
             <MenuItem value="Готівка">Готівка</MenuItem>
             <MenuItem value="Оплата картою">Оплата картою</MenuItem>
           </Select>
-        </FormControl> */}
-        <label htmlFor="comment">Коментар</label>
+        </FormControl>
+        <label htmlFor="comment" className={style.label}>
+          Коментар
+        </label>
         <textarea
           id="comment"
           placeholder="Ваш коментар до замовлення"
@@ -212,10 +242,9 @@ const CheckOutPage = () => {
           {...register("comment")}
         />
         <Button
-          type="submit"
-          disabled={
-            !formState.isDirty || !formState.isValid || formState.isSubmitting
-          }
+          type="button"
+          disabled={!formState.isValid || formState.isSubmitting}
+          onClick={() => setOpenModal(true)}
         >
           Оформити замовлення
         </Button>
@@ -225,10 +254,12 @@ const CheckOutPage = () => {
           title="Підтвердити замовлення"
           onClose={() => setOpenModal(false)}
         >
-          <Button type="button">Підтвердити</Button>
+          <Button type="submit">
+            {creationStatus === "loading" ? "Оформляємо..." : "Підтвердити"}
+          </Button>
+          <p>{creationStatus === "error" ? mutationErrorMessage : null}</p>
         </DialogModal>
       </form>
-      <DevTool control={control} />
     </main>
   );
 };

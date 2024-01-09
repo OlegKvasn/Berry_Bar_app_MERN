@@ -5,22 +5,34 @@
     display: flex;
     flex-direction: column;
     width: 40%;
-    gap: 10px;
+    gap: 12px;
     padding: 20px;
     h3 {
-      color: #555;
+      color: var(--gray-color);
     }
-    label {
-      color: #c2bfbf;
+    .label {
+      color: var(--gray-color-2);
       font-size: 18px;
     }
     input,
     select,
     textarea {
-      padding: 15px;
+      color: var(--gray-color-2);
+      border: 2px solid black;
+      border-radius: 4px;
+      background-color: transparent;
+      padding: 16.5px 14px;
+      &:focus-visible {
+        border: 2px solid var(--green-color-2);
+        outline: none;
+      }
     }
     select {
       text-transform: capitalize;
+    }
+    .error {
+      text-align: center;
+      color: red;
     }
     .address {
       display: flex;

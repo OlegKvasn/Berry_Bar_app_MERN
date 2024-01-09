@@ -4,6 +4,7 @@ import style from "./reviews.module.scss";
 import { useState } from "react";
 import { newRequest } from "../../lib/utils";
 import { IReview } from "../../lib/types";
+import { AxiosError } from "axios";
 
 interface InitialState {
   star: 1 | 2 | 3 | 4 | 5;
@@ -19,9 +20,16 @@ const Reviews = ({ productId }: { productId: string | undefined }) => {
     star: 5,
     desc: "",
   });
+  const [mutationErrorMessage, setMutationErrorMessage] = useState<
+    string | null
+  >(null);
 
   const queryClient = useQueryClient();
-  const { isLoading, error, data } = useQuery({
+  const {
+    isLoading,
+    error: queryError,
+    data,
+  } = useQuery({
     queryKey: ["reviews"],
     queryFn: () =>
       newRequest(`/reviews/${productId}`).then((res) => {
@@ -29,18 +37,26 @@ const Reviews = ({ productId }: { productId: string | undefined }) => {
       }),
   });
 
-  const addReview = useMutation({
+  const { mutate, status } = useMutation({
     mutationFn: (newReview: INewReview) => {
       return newRequest.post("/reviews", newReview);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["reviews"]);
     },
+    onError: (err) => {
+      let message = "Щось пішло не так";
+
+      if (err instanceof AxiosError) {
+        message = err.response?.data.error || "Помилка сервера";
+      }
+      setMutationErrorMessage(message);
+    },
   });
 
   const nandleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    addReview.mutate({
+    mutate({
       productId,
       desc: values.desc,
       star: values.star,
@@ -56,7 +72,7 @@ const Reviews = ({ productId }: { productId: string | undefined }) => {
       <h2>Відгуки:</h2>
       {isLoading
         ? "Завантажується"
-        : error
+        : queryError
         ? "Щось пішло не так"
         : data?.map((review) => <Review key={review._id} review={review} />)}
       <form action="" className={style.add} onSubmit={nandleSubmit}>
@@ -84,8 +100,9 @@ const Reviews = ({ productId }: { productId: string | undefined }) => {
           <option value={5}>5</option>
         </select>
         <button type="submit" className={style.button}>
-          Відправити
+          {status === "loading" ? "Додається..." : "Відправити"}
         </button>
+        <p>{status === "error" ? mutationErrorMessage : null}</p>
       </form>
     </div>
   );

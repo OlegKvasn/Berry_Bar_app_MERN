@@ -8,7 +8,7 @@ import CustomButton from "../../UI/button";
 import CancelButton from "../../UI/icon-button/cancel";
 import DialogModal from "../../UI/dialog-modal";
 import ProductCardCreating from "../../components/product-card-creating";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ErrorModal from "../../components/error-modal";
 import axios from "axios";
 import { IProduct } from "../../lib/types";
@@ -204,7 +204,13 @@ const AddEditProductPage = () => {
         </div>
         {state.cover.length > 0 ? (
           <div className={style.addedImage}>
-            <span>{state.cover}</span>
+            <Link to={state.cover}>
+              <img
+                className={style.productImage}
+                src={state.cover}
+                alt="some image"
+              />
+            </Link>
             <CancelButton type="button" onClick={removeImage} />
           </div>
         ) : null}

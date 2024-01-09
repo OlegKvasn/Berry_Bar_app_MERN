@@ -32,6 +32,13 @@ export const theme = createTheme({
         },
       },
     },
+    // MuiInputLabel: {
+    //   styleOverrides: {
+    //     root: {
+    //       fontSize: `18px`,
+    //     },
+    //   },
+    // },
     MuiOutlinedInput: {
       styleOverrides: {
         notchedOutline: {
@@ -41,7 +48,7 @@ export const theme = createTheme({
         root: {
           //backgroundColor: "#cccccc",
           "& > fieldset > legend": {
-            //fontSize: `0.85em`,
+            //fontSize: `18px`,
           },
           [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
             borderColor: "var(--TextField-brandBorderHoverColor)",
