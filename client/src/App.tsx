@@ -19,6 +19,7 @@ import CartPage from "./page/cart";
 import ProductsAdminPage from "./page/products-admin";
 import CheckOutPage from "./page/check-out";
 import RegisterHookFormPage from "./page/register-hook-form";
+import "./lib/i18n";
 
 function App() {
   const Layout = () => {

@@ -1,0 +1,6 @@
+{
+  "Menu": "Menu",
+  "cart": {
+    "total_price": "{{amount}} UAH"
+  }
+}

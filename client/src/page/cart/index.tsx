@@ -10,6 +10,7 @@ import { useAppDispatch } from "../../lib/redux/store-hooks";
 import DeleteButton from "../../UI/icon-button/delete";
 //import { getCurrentUser } from "../../lib/utils";
 import Button from "../../UI/button";
+import { useTranslation } from "react-i18next";
 
 const CartPage = () => {
   const cartProducts = useSelector(getCartProducts);
@@ -17,6 +18,7 @@ const CartPage = () => {
   const dispatch = useAppDispatch();
   //const currentUser = getCurrentUser();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleRemoveFromCart = (productId: string) => {
     dispatch(removeFromCart(productId));
@@ -74,7 +76,7 @@ const CartPage = () => {
           ))}
         </tbody>
       </table>
-      <h2>{`${totalPrice} грн`}</h2>
+      <h2>{t("cart.total_price", { amount: totalPrice })}</h2>
     </div>
   );
 };

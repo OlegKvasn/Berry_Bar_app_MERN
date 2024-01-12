@@ -4,11 +4,14 @@ import { useEffect, useState } from "react";
 import { getCurrentUser } from "../../lib/utils";
 import { category } from "../../lib/data";
 import AccountMenu from "../account-menu";
+import { useTranslation } from "react-i18next";
+import { LOCALS } from "../../lib/i18n/constants";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
   const { pathname } = useLocation();
   const currentUser = getCurrentUser();
+  const { t, i18n } = useTranslation();
 
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -30,27 +33,39 @@ const Navbar = () => {
         </Link>
         <ul className={style.links}>
           <li>
-            <Link to="/products">Меню</Link>
+            <Link to="/products">{t("navigation.menu")}</Link>
           </li>
           <li>
-            <a href="#contacts">Контакти</a>
+            <a href="#contacts">{t("navigation.contacts")}</a>
           </li>
           <li>
-            <Link to="/cart">Корзина</Link>
+            <Link to="/cart">{t("navigation.cart")}</Link>
           </li>
           {!currentUser.username && (
             <li>
-              <Link to="/register">Реєстрація</Link>
+              <Link to="/register">{t("navigation.register")}</Link>
             </li>
           )}
           {!currentUser.username && (
             <li>
               <button className={style.button}>
-                <NavLink to="/login">Вхід</NavLink>
+                <NavLink to="/login">{t("navigation.login")}</NavLink>
               </button>
             </li>
           )}
           {currentUser.username ? <AccountMenu /> : null}
+          <button
+            disabled={i18n.language === LOCALS.EN}
+            onClick={() => i18n.changeLanguage(LOCALS.EN)}
+          >
+            en
+          </button>
+          <button
+            disabled={i18n.language === LOCALS.UK}
+            onClick={() => i18n.changeLanguage(LOCALS.UK)}
+          >
+            ua
+          </button>
         </ul>
       </nav>
       {(active || pathname !== "/") && (
