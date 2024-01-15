@@ -1,0 +1,22 @@
+{
+  "navigation": {
+    "menu": "Menu",
+    "contacts": "Contacts",
+    "cart": "Cart",
+    "register": "SignUp",
+    "login": "SignIn"
+  },
+  "featured": {
+    "line": "<1>Berry Bar</1> pizzeria restaurant on Knyagini Olga St",
+    "search_btn": "Search",
+    "search_placeholder": "Find what you want to taste",
+    "popular_requests": "Popular requests:"
+  },
+  "product": {
+    "from": "From",
+    "add_btn": "Add to cart"
+  },
+  "cart": {
+    "total_price": "{{amount}} UAH"
+  }
+}

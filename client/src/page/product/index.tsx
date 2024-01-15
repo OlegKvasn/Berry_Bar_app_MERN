@@ -7,10 +7,12 @@ import { newRequest } from "../../lib/utils";
 import { IProduct } from "../../lib/types";
 import { useAppDispatch } from "../../lib/redux/store-hooks";
 import { addToCart } from "../../lib/redux/cart-slice";
+import { useTranslation } from "react-i18next";
 
 const ProductPage = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
+  const { t, i18n } = useTranslation();
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["product"],
@@ -34,7 +36,7 @@ const ProductPage = () => {
         <div className={style.mainContainer}>
           <div className={style.left}>
             <span className={style.links}>Menu ⤍ Burgers</span>
-            <h1>{data?.title}</h1>
+            <h1>{i18n.language === "en" ? data?.title_en : data?.title}</h1>
             <img
               className={style.mainImage}
               src={data?.cover}
@@ -50,25 +52,20 @@ const ProductPage = () => {
                 <span>{Math.round(data.totalStars / data.starNumber)}</span>
               </div>
             ) : null}
-            <h2>Склад:</h2>
-            {data?.ingredients
-              ? data?.ingredients.map((ing: string, ind) => (
-                  <p className={style.desc} key={`${ind}${ing}`}>
-                    {ing}
-                  </p>
-                ))
-              : null}
-            {data?.desc ? <p className={style.desc}>{data?.desc}</p> : null}
+            {i18n.language === "en" ? IngredientsEn(data) : IngredientsUk(data)}
+            <p className={style.desc}>
+              {i18n.language === "en" ? data?.desc_en : data?.desc}
+            </p>
             <Reviews productId={id} />
           </div>
           <div className={style.right}>
             <div className={style.price}>
-              <h3>{data?.title}</h3>
+              <h3>{i18n.language === "en" ? data?.title_en : data?.title}</h3>
               <h2>{`${data?.price} ₴`}</h2>
             </div>
             {data ? (
               <button onClick={() => handleAddToCart(data)}>
-                Додати до замовлення
+                {t("product.add_btn")}
               </button>
             ) : null}
           </div>
@@ -77,6 +74,41 @@ const ProductPage = () => {
     </div>
   );
 };
+
+const IngredientsUk = (product: IProduct | undefined) => {
+  if (!product) return null;
+  if (!product.ingredients) return null;
+  if (product.ingredients.length < 1) return null;
+
+  return (
+    <>
+      <h2>Склад:</h2>
+      {product.ingredients.map((ing: string, ind) => (
+        <p className={style.desc} key={`${ind}${ing}`}>
+          {ing}
+        </p>
+      ))}
+    </>
+  );
+};
+
+const IngredientsEn = (product: IProduct | undefined) => {
+  if (!product) return null;
+  if (!product.ingredients_en) return null;
+  if (product.ingredients_en.length < 1) return null;
+
+  return (
+    <>
+      <h2>Ingredients:</h2>
+      {product.ingredients_en.map((ing: string, ind) => (
+        <p className={style.desc} key={`${ind}${ing}`}>
+          {ing}
+        </p>
+      ))}
+    </>
+  );
+};
+
 // interface LoaderProductData {
 //   name: string;
 //   weight: string;

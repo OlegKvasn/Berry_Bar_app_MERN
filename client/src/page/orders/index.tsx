@@ -3,6 +3,15 @@ import style from "./orders.module.scss";
 import { newRequest } from "../../lib/utils";
 import { IOrder } from "../../lib/types";
 
+const daysFromOrder = (date: string | undefined) => {
+  let creationDate = new Date().getTime();
+  if (date) {
+    creationDate = new Date(date).getTime();
+  }
+  const timeDifference = new Date().getTime() - creationDate;
+  return Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+};
+
 const OrdersPage = () => {
   // const currentUser: IUser = JSON.parse(
   //   localStorage.getItem("currentUser") || "{}"
@@ -34,6 +43,7 @@ const OrdersPage = () => {
                 <th>Назва</th>
                 <th>Кількість</th>
                 <th>Ціна</th>
+                <th>Днів з моменту оформлення</th>
                 <th>Видалити</th>
               </tr>
             </thead>
@@ -50,6 +60,7 @@ const OrdersPage = () => {
                   <td>PORK БУРГЕР</td>
                   <td>1</td>
                   <td>{order.totalPrice} грн</td>
+                  <td>{daysFromOrder(order.createdAt?.slice(0, 10))}</td>
                   <td>
                     <img
                       className={style.delete}

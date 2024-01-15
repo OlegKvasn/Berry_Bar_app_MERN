@@ -1,7 +1,11 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { category } from "../../lib/data";
 import style from "./addProduct.module.scss";
-import { INITIAL_STATE, productReducer } from "../../lib/product-reducer";
+import {
+  INITIAL_STATE,
+  TState,
+  productReducer,
+} from "../../lib/product-reducer";
 import { baseURL, newRequest, upload } from "../../lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import CustomButton from "../../UI/button";
@@ -12,8 +16,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import ErrorModal from "../../components/error-modal";
 import axios from "axios";
 import { IProduct } from "../../lib/types";
-
-type TInitialState = typeof INITIAL_STATE;
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 type THandleChange =
   | React.ChangeEvent<HTMLInputElement>
@@ -23,6 +27,7 @@ type THandleChange =
 const AddEditProductPage = () => {
   const [isOpenModal, setOpenModal] = useState(false);
   const [ingredient, setIngredient] = useState("");
+  const [ingredient_en, setIngredient_en] = useState("");
   const [coverFile, setCoverFile] = useState<File | null>(null);
   // const [files, setFiles] = useState<FileList | null>(null);
   const [uploaded, setUploaded] = useState(false);
@@ -41,12 +46,19 @@ const AddEditProductPage = () => {
             type: "CHANGE_INITIAL_STATE",
             payload: {
               title: data.title,
+              title_en: data.title_en,
               category: data.category,
               price: data.price,
               salePrice: data.salePrice || "",
               cover: data.cover,
               ingredients: data.ingredients || [""],
+              ingredients_en: data.ingredients_en || [""],
               desc: data.desc || "",
+              desc_en: data.desc_en || "",
+              isVegan: data.isVegan,
+              isNew: data.isNew,
+              isHot: data.isHot,
+              isDeal: data.isDeal,
             },
           });
         } catch (err) {
@@ -65,12 +77,29 @@ const AddEditProductPage = () => {
     });
   };
 
+  const handleChangeCheckbox = ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: "CHANGE_CHECKBOX",
+      payload: { name: target.name, value: target.checked },
+    });
+  };
+
   const handleAddIngredient = () => {
     dispatch({
       type: "ADD_INGREDIENT",
       payload: ingredient,
     });
     setIngredient("");
+  };
+
+  const handleAddIngredientEn = () => {
+    dispatch({
+      type: "ADD_INGREDIENT_EN",
+      payload: ingredient_en,
+    });
+    setIngredient_en("");
   };
 
   const handleUpload = async () => {
@@ -102,13 +131,13 @@ const AddEditProductPage = () => {
   const navigate = useNavigate();
 
   const createProductMutation = useMutation({
-    mutationFn: (newProduct: TInitialState) => {
+    mutationFn: (newProduct: TState) => {
       return newRequest.post("/products", newProduct);
     },
   });
 
   const editProductMutation = useMutation({
-    mutationFn: (editProduct: TInitialState) => {
+    mutationFn: (editProduct: TState) => {
       return newRequest.patch(`/products/${id}`, editProduct);
     },
   });
@@ -145,6 +174,15 @@ const AddEditProductPage = () => {
           id="title"
           placeholder="Назва продукту"
           value={state.title}
+          onChange={handleChange}
+        />
+        <label htmlFor="title_en">* Назва (English version)</label>
+        <input
+          type="text"
+          name="title_en"
+          id="title_en"
+          placeholder="Назва продукту (Англ)"
+          value={state.title_en}
           onChange={handleChange}
         />
         <label htmlFor="category">Категорія</label>
@@ -214,53 +252,132 @@ const AddEditProductPage = () => {
             <CancelButton type="button" onClick={removeImage} />
           </div>
         ) : null}
-        <label htmlFor="ing">Додати Інгредієнти</label>
-        <div className={style.add}>
-          <input
-            type="text"
-            placeholder="Інгредієнт"
-            name="ing"
-            id="ing"
-            onChange={(e) => setIngredient(e.target.value)}
-            value={ingredient}
-          />
-          <CustomButton type="button" onClick={handleAddIngredient}>
-            додати
-          </CustomButton>
-        </div>
-        <div className={style.addedIngredients}>
-          {state.ingredients.map((ing, index) => (
-            <React.Fragment key={index}>
-              <span>{ing}</span>
-              {ing.length > 0 ? (
-                <CancelButton
-                  type="button"
-                  onClick={() =>
-                    dispatch({ type: "REMOVE_INGREDIENT", payload: ing })
-                  }
-                />
-              ) : // <button
-              //   onClick={() =>
-              //     dispatch({ type: "REMOVE_INGREDIENT", payload: ing })
-              //   }
-              // >
-              //   X
-              // </button>
-              null}
-            </React.Fragment>
-          ))}
-        </div>
+        <fieldset>
+          <label htmlFor="ing">Додати Інгредієнти</label>
+          <div className={style.add}>
+            <input
+              type="text"
+              placeholder="Інгредієнт"
+              name="ing"
+              id="ing"
+              onChange={(e) => setIngredient(e.target.value)}
+              value={ingredient}
+            />
+            <CustomButton type="button" onClick={handleAddIngredient}>
+              додати
+            </CustomButton>
+          </div>
+          <div className={style.addedIngredients}>
+            {state.ingredients.map((ing, index) => (
+              <React.Fragment key={index}>
+                <span>{ing}</span>
+                {ing.length > 0 ? (
+                  <CancelButton
+                    type="button"
+                    onClick={() =>
+                      dispatch({ type: "REMOVE_INGREDIENT", payload: ing })
+                    }
+                  />
+                ) : null}
+              </React.Fragment>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset>
+          <label htmlFor="ing_en">Додати Інгредієнти (English version)</label>
+          <div className={style.add}>
+            <input
+              type="text"
+              placeholder="Ingredient (in english)"
+              name="ing_en"
+              id="ing_en"
+              onChange={(e) => setIngredient_en(e.target.value)}
+              value={ingredient_en}
+            />
+            <CustomButton type="button" onClick={handleAddIngredientEn}>
+              додати
+            </CustomButton>
+          </div>
+          <div className={style.addedIngredients}>
+            {state.ingredients_en.map((ing, index) => (
+              <React.Fragment key={index}>
+                <span>{ing}</span>
+                {ing.length > 0 ? (
+                  <CancelButton
+                    type="button"
+                    onClick={() =>
+                      dispatch({ type: "REMOVE_INGREDIENT_EN", payload: ing })
+                    }
+                  />
+                ) : null}
+              </React.Fragment>
+            ))}
+          </div>
+        </fieldset>
+
         <label htmlFor="desc">Опис</label>
         <textarea
           name="desc"
           id="desc"
           placeholder="Додатковий опис(опціонально)"
-          cols={30}
-          rows={10}
+          cols={20}
+          rows={5}
           value={state.desc}
           onChange={handleChange}
         />
-        <p>* Продукт повинен містити Назву, Ціну та Зображення</p>
+        <label htmlFor="desc_en">Опис (English version)</label>
+        <textarea
+          name="desc_en"
+          id="desc_en"
+          placeholder="Додатковий опис(English version)"
+          cols={20}
+          rows={5}
+          value={state.desc_en}
+          onChange={handleChange}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={state.isVegan}
+              name="isVegan"
+              onChange={handleChangeCheckbox}
+            />
+          }
+          label="Для вегетаріанців"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={state.isNew}
+              name="isNew"
+              onChange={handleChangeCheckbox}
+            />
+          }
+          label="Новинка"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={state.isHot}
+              name="isHot"
+              onChange={handleChangeCheckbox}
+            />
+          }
+          label="Топ замовлень"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={state.isDeal}
+              name="isDeal"
+              onChange={handleChangeCheckbox}
+            />
+          }
+          label="Діє Знижка"
+        />
+        <p>
+          * Продукт повинен містити Назву (на обох мовах), Ціну та Зображення
+        </p>
 
         <CustomButton
           type="button"
@@ -276,12 +393,19 @@ const AddEditProductPage = () => {
         <DialogModal isOpen={isOpenModal} onClose={() => setOpenModal(false)}>
           <ProductCardCreating
             title={state.title}
+            title_en={state.title_en}
             category={state.category}
             cover={state.cover}
             ingredients={state.ingredients}
+            ingredients_en={state.ingredients_en}
             desc={state.desc}
+            desc_en={state.desc_en}
             salePrice={state.salePrice}
             price={state.price}
+            isVegan={state.isVegan}
+            isNew={state.isNew}
+            isHot={state.isHot}
+            isDeal={state.isDeal}
           />
           <CustomButton type="submit">Підтвердити</CustomButton>
         </DialogModal>

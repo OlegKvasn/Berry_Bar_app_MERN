@@ -25,4 +25,8 @@ export const category = [
   },
 ] as const;
 
-export const popular = ["Карбонара", "М'ясна", "Гавайська"] as const;
+export const popular = [
+  { uk: "Карбонара", en: "Carbonara" },
+  { uk: "М'ясна", en: "Meat Pizza" },
+  { uk: "Гавайська", en: "Hawaiian Pizza" },
+] as const;

@@ -1,0 +1,22 @@
+{
+  "navigation": {
+    "menu": "Меню",
+    "contacts": "Контакти",
+    "cart": "Корзина",
+    "register": "Реєстрація",
+    "login": "Вхід"
+  },
+  "featured": {
+    "line": "<1>Бері Бар</1> ресторан піцерія на вул. Княгині Ольги",
+    "search_btn": "Пошук",
+    "search_placeholder": "Знайди те, що хочеш скуштувати",
+    "popular_requests": "Популярні запити:"
+  },
+  "product": {
+    "from": "Від",
+    "add_btn": "Додати до замовлення"
+  },
+  "cart": {
+    "total_price": "{{amount}} ГРН"
+  }
+}

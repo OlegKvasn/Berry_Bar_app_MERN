@@ -14,7 +14,9 @@ export interface IUser {
 export interface IProduct {
   _id: string;
   title: string;
+  title_en: string;
   ingredients?: string[];
+  ingredients_en?: string[];
   totalStars: number;
   starNumber: number;
   category: string;
@@ -22,8 +24,13 @@ export interface IProduct {
   salePrice?: string;
   cover: string;
   images?: string;
-  sales: string;
+  sales: number;
   desc?: string;
+  desc_en?: string;
+  isVegan: boolean;
+  isNew: boolean;
+  isHot: boolean;
+  isDeal: boolean;
   createdAt: string;
   updatedAt: string;
 }

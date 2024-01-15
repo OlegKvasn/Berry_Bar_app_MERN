@@ -15,7 +15,14 @@ export const getProducts: RequestHandler = async (req, res, next) => {
   //   category: q.category,
   // };
   const filters = {
-    ...(q.search && { title: { $regex: q.search, $options: "i" } }),
+    ...(q.search && {
+      $or: [
+        {
+          title: { $regex: q.search, $options: "i" },
+        },
+        { title_en: { $regex: q.search, $options: "i" } },
+      ],
+    }),
     ...(q.category && { category: q.category }),
   };
 
@@ -60,6 +67,7 @@ export const createProduct: RequestHandler<
   try {
     if (
       !req.body.title ||
+      !req.body.title_en ||
       !req.body.category ||
       !req.body.price ||
       !req.body.cover
@@ -85,14 +93,20 @@ export const updateProduct: RequestHandler<
 > = async (req, res, next) => {
   const productId = req.params.productId;
   const newTitle = req.body.title;
+  const newTitleEn = req.body.title_en;
   const newDesc = req.body.desc;
+  const newDescEn = req.body.desc_en;
   const newCategory = req.body.category;
   const newPrice = req.body.price;
   const newSalePrice = req.body.salePrice;
   const newCover = req.body.cover;
   const newIngredients = req.body.ingredients;
-  const newStarNumber = req.body.starNumber;
+  const newIngredientsEn = req.body.ingredients_en;
   const newImages = req.body.images;
+  const newIsVegan = req.body.isVegan;
+  const newIsNew = req.body.isNew;
+  const newIsHot = req.body.isHot;
+  const newIsDeal = req.body.isDeal;
   try {
     if (!mongoose.isValidObjectId(productId)) {
       throw createHttpError(400, "Invalid product id");
@@ -111,14 +125,20 @@ export const updateProduct: RequestHandler<
     }
 
     product.title = newTitle;
+    product.title_en = newTitleEn;
     product.desc = newDesc;
+    product.desc_en = newDescEn;
     product.category = newCategory;
     product.price = newPrice;
     product.salePrice = newSalePrice;
     product.cover = newCover;
     product.ingredients = newIngredients;
-    product.starNumber = newStarNumber;
+    product.ingredients_en = newIngredientsEn;
     product.images = newImages;
+    product.isVegan = newIsVegan;
+    product.isNew = newIsNew;
+    product.isHot = newIsHot;
+    product.isDeal = newIsDeal;
 
     const updatedProduct = await product.save();
 

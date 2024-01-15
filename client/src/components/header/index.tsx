@@ -5,7 +5,6 @@ import { getCurrentUser } from "../../lib/utils";
 import { category } from "../../lib/data";
 import AccountMenu from "../account-menu";
 import { useTranslation } from "react-i18next";
-import { LOCALS } from "../../lib/i18n/constants";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
@@ -55,14 +54,14 @@ const Navbar = () => {
           )}
           {currentUser.username ? <AccountMenu /> : null}
           <button
-            disabled={i18n.language === LOCALS.EN}
-            onClick={() => i18n.changeLanguage(LOCALS.EN)}
+            disabled={i18n.language === "en"}
+            onClick={() => i18n.changeLanguage("en")}
           >
             en
           </button>
           <button
-            disabled={i18n.language === LOCALS.UK}
-            onClick={() => i18n.changeLanguage(LOCALS.UK)}
+            disabled={i18n.language === "uk"}
+            onClick={() => i18n.changeLanguage("uk")}
           >
             ua
           </button>

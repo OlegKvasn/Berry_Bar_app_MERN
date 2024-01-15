@@ -6,10 +6,20 @@ const ProductSchema = new Schema(
       type: String,
       required: true,
     },
+    title_en: {
+      type: String,
+      required: true,
+    },
     desc: {
       type: String,
     },
+    desc_en: {
+      type: String,
+    },
     ingredients: {
+      type: [String],
+    },
+    ingredients_en: {
       type: [String],
     },
     totalStars: {
@@ -41,6 +51,22 @@ const ProductSchema = new Schema(
     sales: {
       type: Number,
       default: 0,
+    },
+    isVegan: {
+      type: Boolean,
+      default: false,
+    },
+    isNew: {
+      type: Boolean,
+      default: false,
+    },
+    isHot: {
+      type: Boolean,
+      default: false,
+    },
+    isDeal: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
