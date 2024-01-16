@@ -14,12 +14,14 @@ import List from "@mui/icons-material/List";
 import Summarize from "@mui/icons-material/Summarize";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import { useTranslation } from "react-i18next";
 
 const AccountMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const currentUser = getCurrentUser();
+  const { t } = useTranslation();
 
   const handleLogout = async () => {
     try {
@@ -72,7 +74,7 @@ const AccountMenu = () => {
             <ListItemIcon>
               <Add fontSize="small" />
             </ListItemIcon>
-            Добавити новий продукт
+            {t("acc_menu.add_new_product")}
           </MenuItem>
         )}
         {currentUser?.isAdmin && (
@@ -80,27 +82,27 @@ const AccountMenu = () => {
             <ListItemIcon>
               <List fontSize="small" />
             </ListItemIcon>
-            Всі продукти
+            {t("acc_menu.all_products")}
           </MenuItem>
         )}
         <MenuItem onClick={() => navigate("/orders")}>
           <ListItemIcon>
             <Summarize fontSize="small" />
           </ListItemIcon>
-          Замовлення
+          {t("acc_menu.orders")}
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
-          Налаштування
+          {t("acc_menu.settings")}
         </MenuItem>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          Вихід
+          {t("acc_menu.logout")}
         </MenuItem>
       </Menu>
     </>

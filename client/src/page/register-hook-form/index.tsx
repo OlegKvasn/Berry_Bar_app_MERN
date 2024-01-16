@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import CustomButton from "../../UI/button";
 import { AxiosError } from "axios";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type TFormValues = {
   username: string;
@@ -17,27 +18,30 @@ type TFormValues = {
   phone: string;
 };
 
-const validationSchema = z
-  .object({
-    username: z.string().min(1, { message: "Їм'я користувача є обов'язковим" }),
-    email: z
-      .string()
-      .min(1, { message: "E-mail є обов'язковим" })
-      .email("Неправильний E-mail формат"),
-    password: z
-      .string()
-      .min(5, { message: "Пароль повинен містити більше 5 символів" }),
-    passwordConfirm: z.string(),
-  })
-  .refine((data) => data.password === data.passwordConfirm, {
-    message: "Пароль не співпадає",
-    path: ["passwordConfirm"],
-  });
-
 const RegisterHookFormPage = () => {
   const [responseErrorMessage, setResponseErrorMessage] = useState<
     string | null
   >(null);
+  const { t } = useTranslation();
+
+  const validationSchema = z
+    .object({
+      username: z.string().min(1, { message: t("register.err_username") }),
+      email: z
+        .string()
+        .min(1, { message: t("register.err_email_req") })
+        .email(t("register.err_email_wrong")),
+      password: z.string().min(5, {
+        message: t("register.err_pass", {
+          amount: 5,
+        }),
+      }),
+      passwordConfirm: z.string(),
+    })
+    .refine((data) => data.password === data.passwordConfirm, {
+      message: t("register.err_pass_confirm"),
+      path: ["passwordConfirm"],
+    });
 
   const { register, handleSubmit, formState } = useForm<TFormValues>({
     defaultValues: {
@@ -62,10 +66,10 @@ const RegisterHookFormPage = () => {
         localStorage.setItem("currentUser", JSON.stringify(res.data));
         navigate("/");
       } catch (err) {
-        let message = "Щось пішло не так";
+        let message = t("register.err_unknown");
 
         if (err instanceof AxiosError) {
-          message = err.response?.data.error || "Помилка сервера";
+          message = err.response?.data.error || t("register.err_server");
         }
         setResponseErrorMessage(message);
       }
@@ -79,10 +83,10 @@ const RegisterHookFormPage = () => {
   return (
     <div className={style.mainContainer}>
       <form noValidate onSubmit={handleSubmit(onSubmit, onError)}>
-        <h1>Реєстрація нового користувача</h1>
+        <h1>{t("register.reg_title")}</h1>
         <TextField
           id="username"
-          label="* Їм'я"
+          label={t("register.username")}
           variant="outlined"
           {...register("username")}
           error={!!formState.errors.username}
@@ -90,7 +94,7 @@ const RegisterHookFormPage = () => {
         />
         <TextField
           id="email"
-          label="* E-mail"
+          label={t("register.email")}
           variant="outlined"
           type="email"
           {...register("email")}
@@ -99,7 +103,7 @@ const RegisterHookFormPage = () => {
         />
         <TextField
           id="password"
-          label="* Пароль"
+          label={t("register.pass")}
           variant="outlined"
           type="password"
           {...register("password")}
@@ -108,7 +112,7 @@ const RegisterHookFormPage = () => {
         />
         <TextField
           id="passwordConfirmation"
-          label="* Підтвердіть пароль"
+          label={t("register.pass_confirm")}
           variant="outlined"
           type="password"
           {...register("passwordConfirm")}
@@ -117,7 +121,7 @@ const RegisterHookFormPage = () => {
         />
         <TextField
           id="phone"
-          label="Номер телефону"
+          label={t("register.phone")}
           variant="outlined"
           type="tel"
           {...register("phone")}
@@ -127,12 +131,12 @@ const RegisterHookFormPage = () => {
         {responseErrorMessage ? (
           <p className={style.error}>
             {responseErrorMessage === "Email already in use"
-              ? "За цим E-mail вже зареєстровано користувача"
+              ? t("register.err_email_exist")
               : responseErrorMessage}
           </p>
         ) : null}
-        <CustomButton type="submit">Зареєструватися</CustomButton>
-        <p>* Обов'язкові поля</p>
+        <CustomButton type="submit">{t("register.reg_btn")}</CustomButton>
+        <p>{t("register.reg_footer")}</p>
       </form>
     </div>
   );

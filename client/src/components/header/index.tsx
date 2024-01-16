@@ -77,7 +77,7 @@ const Navbar = () => {
                 className={style.menuLink}
                 to={`/products?category=${cat.value}`}
               >
-                {cat.name}
+                {i18n.language === "en" ? cat.name_en : cat.name}
               </Link>
             ))}
           </section>

@@ -6,12 +6,14 @@
   background-color: #fff;
   color: black;
   justify-content: center;
+  h1 {
+    text-transform: capitalize;
+  }
 
   .menu {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     .left {
       display: flex;
       align-items: center;
@@ -26,46 +28,15 @@
 
     .right {
       display: flex;
-      align-items: center;
-      gap: 10px;
-      position: relative;
-
+      align-items: end;
+      gap: 20px;
       .sortBy {
         color: #555;
         font-weight: 300;
       }
-      .sortType {
-        font-weight: 500;
-      }
-
-      img {
-        width: 15px;
-        cursor: pointer;
-      }
-
-      .rightMenu {
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 5px;
-        border: 0.5px solid lightgray;
-        position: absolute;
-        top: 30px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        color: #555;
-        z-index: 5;
-
-        span {
-          cursor: pointer;
-        }
+      div {
+        width: auto;
       }
     }
   }
-
-  // .cards {
-  //   display: flex;
-  //   flex-wrap: wrap;
-  //   justify-content: space-between;
-  // }
 }

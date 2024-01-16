@@ -31,6 +31,7 @@ const cartSlice = createSlice({
           productId: action.payload._id,
           productImage: action.payload.cover,
           productName: action.payload.title,
+          productNameEn: action.payload.title_en,
           productPrice: Number(action.payload.price),
           quantity: 1,
         });

@@ -6,7 +6,7 @@ interface IButton extends React.ComponentProps<"button"> {
   borderRadius?: 20 | 10 | 0;
 }
 
-const Button = ({
+const CustomButton = ({
   children,
   className,
   borderRadius = 0,
@@ -23,4 +23,4 @@ const Button = ({
   );
 };
 
-export default Button;
+export default CustomButton;

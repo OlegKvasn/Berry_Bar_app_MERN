@@ -4,54 +4,66 @@
   .form {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 50%;
     gap: 12px;
     padding: 20px;
-    h3 {
+    h1 {
       color: var(--gray-color);
+      text-align: center;
     }
-    .label {
-      color: var(--gray-color-2);
-      font-size: 18px;
-    }
-    input,
-    select,
-    textarea {
-      color: var(--gray-color-2);
-      border: 2px solid black;
-      border-radius: 4px;
-      background-color: transparent;
-      padding: 16.5px 14px;
-      &:focus-visible {
-        border: 2px solid var(--green-color-2);
-        outline: none;
+    .fieldset {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+      width: 100%;
+      h2 {
+        text-align: center;
       }
-    }
-    select {
-      text-transform: capitalize;
+      .label {
+        color: var(--gray-color-2);
+        font-size: 18px;
+      }
+      input,
+      select,
+      textarea {
+        color: var(--gray-color-2);
+        border: 2px solid black;
+        border-radius: 4px;
+        background-color: transparent;
+        padding: 16.5px 14px;
+        &:focus-visible {
+          border: 2px solid var(--green-color-2);
+          outline: none;
+        }
+      }
+      select {
+        text-transform: capitalize;
+      }
+      .address {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        div {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          input {
+            padding: 10px;
+          }
+          &:nth-child(2) {
+            width: 20%;
+          }
+          &:nth-child(3) {
+            width: 15%;
+          }
+        }
+      }
     }
     .error {
       text-align: center;
       color: red;
-    }
-    .address {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      div {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        input {
-          padding: 10px;
-        }
-        &:nth-child(2) {
-          width: 20%;
-        }
-        &:nth-child(3) {
-          width: 15%;
-        }
-      }
+      margin: 10px 0;
     }
   }
 }

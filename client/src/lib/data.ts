@@ -1,26 +1,34 @@
+export const minOrderPrice = 200 as const;
+
 export const category = [
   {
-    name: "pizza",
+    name: "піцца",
+    name_en: "pizza",
     value: "pizza",
   },
   {
-    name: "burger",
+    name: "бургер",
+    name_en: "burger",
     value: "burger",
   },
   {
     name: "паста",
+    name_en: "pasta",
     value: "pasta",
   },
   {
     name: "салати",
+    name_en: "salad",
     value: "salad",
   },
   {
     name: "гриль",
+    name_en: "grill",
     value: "grill",
   },
   {
     name: "напої",
+    name_en: "drink",
     value: "drink",
   },
 ] as const;

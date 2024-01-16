@@ -48,6 +48,7 @@ export interface IProductInCart {
   productId: string;
   productImage: string;
   productName: string;
+  productNameEn: string;
   productPrice: number;
   quantity: number;
 }
@@ -58,7 +59,7 @@ export interface IOrder {
   phone: string;
   email?: string;
   address?: {
-    city: "Петропавлівська Борщагівка" | "Софіївська Борщагівка";
+    city: string;
     street: string;
     apartment: string;
     portal: string;
@@ -66,9 +67,9 @@ export interface IOrder {
   products: IProductInCart[];
   orderNumber: number;
   totalPrice: number;
-  delivery: "Самовивіз" | "Доставка додому";
+  delivery: "self_pickup" | "home_delivery";
   deliveryTime?: string;
-  paymentMethod: "Готівка" | "Оплата картою";
+  paymentMethod: "by_cash" | "by_card";
   comment?: string;
   orderStatus?:
     | "created"

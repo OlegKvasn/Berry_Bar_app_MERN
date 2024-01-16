@@ -8,25 +8,27 @@ import CustomButton from "../../UI/button";
 import { FieldErrors, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 
 type TFormValues = {
   email: string;
   password: string;
 };
 
-const validationSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: "Введіть ваш E-mail" })
-    .email("Неправильний E-mail формат"),
-  password: z.string().min(1, { message: "Введіть пароль" }),
-});
-
 const LoginPage = () => {
   const navigate = useNavigate();
   const [responseErrorMessage, setResponseErrorMessage] = useState<
     string | null
   >(null);
+  const { t } = useTranslation();
+
+  const validationSchema = z.object({
+    email: z
+      .string()
+      .min(1, { message: t("login.err_email_req") })
+      .email(t("login.err_email_wrong")),
+    password: z.string().min(1, { message: t("login.err_pass") }),
+  });
 
   const { register, handleSubmit, formState } = useForm<TFormValues>({
     defaultValues: {
@@ -46,10 +48,10 @@ const LoginPage = () => {
         localStorage.setItem("currentUser", JSON.stringify(res.data));
         navigate("/");
       } catch (err) {
-        let message = "Щось пішло не так";
+        let message = t("login.err_unknown");
 
         if (err instanceof AxiosError) {
-          message = err.response?.data.error || "Помилка сервера";
+          message = err.response?.data.error || t("login.err_server");
         }
         setResponseErrorMessage(message);
       }
@@ -63,10 +65,10 @@ const LoginPage = () => {
   return (
     <div className={style.mainContainer}>
       <form noValidate onSubmit={handleSubmit(onSubmit, onError)}>
-        <h1>Вхід</h1>
+        <h1>{t("login.log_title")}</h1>
         <TextField
           id="email"
-          label="* E-mail"
+          label={t("login.email")}
           variant="outlined"
           type="email"
           {...register("email")}
@@ -75,7 +77,7 @@ const LoginPage = () => {
         />
         <TextField
           id="password"
-          label="* Пароль"
+          label={t("login.pass")}
           variant="outlined"
           type="password"
           {...register("password")}
@@ -85,13 +87,13 @@ const LoginPage = () => {
         {responseErrorMessage ? (
           <p className={style.error}>
             {responseErrorMessage === "Wrong password or username"
-              ? "Неправильний пароль"
+              ? t("login.err_pass_wrong")
               : responseErrorMessage === "User not found"
-              ? "За цим E-mail немає зареєстрованого користувача"
+              ? t("login.err_user_not_found")
               : responseErrorMessage}
           </p>
         ) : null}
-        <CustomButton type="submit">Вхід</CustomButton>
+        <CustomButton type="submit">{t("login.log_btn")}</CustomButton>
       </form>
     </div>
   );
