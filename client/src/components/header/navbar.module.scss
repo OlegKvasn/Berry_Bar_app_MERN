@@ -8,6 +8,7 @@
   background-color: var(--green-color);
   color: #fff;
   transition: 0.5s all ease;
+
   &.header[data-navbar="active"] {
     background-color: #fff;
     color: var(--green-color);
@@ -42,9 +43,35 @@
       border: 1px solid #fff;
       cursor: pointer;
       background-color: transparent;
-
       &:hover {
-        background-color: #013914;
+        background-color: var(--dark-green-color);
+      }
+    }
+    .languageBar {
+      display: flex;
+      flex-direction: row;
+      align-items: end;
+      button {
+        color: inherit;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 5px;
+        &:disabled {
+          color: var(--dark-green-color);
+          font-size: 19px;
+          font-weight: 100;
+          cursor: auto;
+        }
+      }
+      hr {
+        width: 0;
+        height: 30px;
+        //color: inherit;
+        border-left: 0.5px solid #ebe9e9;
+        border-right: 0.5px solid #ebe9e9;
       }
     }
   }
@@ -61,6 +88,7 @@
     justify-content: space-around;
     color: gray;
     font-weight: 300;
+    //box-shadow: 10px 10px 20px var(--gray-color-2);
     .menuLink {
       text-transform: capitalize;
     }

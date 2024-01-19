@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import style from "./acc-menu.module.scss";
 import { useState } from "react";
 import { getCurrentUser, newRequest } from "../../lib/utils";
@@ -16,12 +16,13 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { useTranslation } from "react-i18next";
 
-const AccountMenu = () => {
+const AccountMenu = ({ status }: { status: boolean }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const currentUser = getCurrentUser();
   const { t } = useTranslation();
+  const { pathname } = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -42,21 +43,29 @@ const AccountMenu = () => {
 
   return (
     <>
-      <Tooltip title="Профіль">
+      <Tooltip title={t("acc_menu.profile")}>
         <Button
           onClick={handleOpen}
           size="small"
-          sx={{ ml: 2, textTransform: "none" }}
+          sx={{ m: 0, textTransform: "none" }}
           aria-controls={open ? "account-menu" : undefined}
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
         >
-          <img
-            className={style.img}
-            src={currentUser.img || "/img/noavatar.jpg"}
-            alt=""
-          />
-          {currentUser?.username}
+          <div className={style.button}>
+            <img
+              className={style.img}
+              src={currentUser.img || "/img/noavatar.jpg"}
+              alt=""
+            />
+            <span
+              className={style.username}
+              data-navbar={status || pathname !== "/" ? "active" : "inactive"}
+            >
+              {currentUser?.username}
+            </span>
+          </div>
+
           {/* <Avatar sx={{ width: 32, height: 32 }}>M</Avatar> */}
         </Button>
       </Tooltip>

@@ -1,0 +1,45 @@
+.button {
+  height: 30px;
+  width: 30px;
+  margin: 0 10px 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border: none;
+  border-radius: 100%;
+  cursor: pointer;
+  position: relative;
+  background-color: transparent;
+  transition: all 0.5s ease;
+  &.button[data-navbar="active"] {
+    color: var(--green-color);
+    .count {
+      color: #fff;
+      background-color: var(--green-color);
+    }
+  }
+  &:hover {
+    opacity: 0.5;
+  }
+  .icon {
+    height: 100%;
+    width: 100%;
+  }
+  .count {
+    color: var(--green-color);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    width: 20px;
+    height: 20px;
+    left: 100%;
+    top: 100%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 50%;
+  }
+}

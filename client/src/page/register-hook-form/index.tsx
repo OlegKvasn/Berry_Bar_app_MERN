@@ -1,5 +1,5 @@
 import style from "./register.module.scss";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { newRequest } from "../../lib/utils";
 import { FieldErrors, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -82,8 +82,12 @@ const RegisterHookFormPage = () => {
 
   return (
     <div className={style.mainContainer}>
+      <h1>{t("register.reg_title")}</h1>
+      <div className={style.title2}>
+        <p>{t("register.reg_title_2")}</p>
+        <Link to="/login">{t("register.login")}</Link>
+      </div>
       <form noValidate onSubmit={handleSubmit(onSubmit, onError)}>
-        <h1>{t("register.reg_title")}</h1>
         <TextField
           id="username"
           label={t("register.username")}

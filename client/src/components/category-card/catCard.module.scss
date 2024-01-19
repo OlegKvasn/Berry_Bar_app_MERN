@@ -2,31 +2,42 @@
   display: flex;
   justify-content: space-around;
   color: #fff;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   position: relative;
   margin: 0 5px;
   overflow: hidden;
+  transition: all 0.2s ease;
+  &:hover {
+    transform: translate(-2%, -2%);
+    box-shadow: 5px 10px 20px var(--gray-color-2);
+    a {
+      opacity: 0.9 !important;
+    }
+  }
 
   img {
-    aspect-ratio: 20/30;
+    aspect-ratio: 20/20;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
   .title {
-    font-weight: 500;
-    font-size: 24px;
     position: absolute;
-    top: 15px;
-    left: 15px;
-  }
-
-  .desc {
-    font-weight: 300;
-    position: absolute;
-    top: 40px;
-    left: 15px;
+    display: flex;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #88b06acc;
+    border-radius: 10px;
+    align-items: center;
+    span {
+      margin: 5px 20px;
+      font-weight: 700;
+      font-size: 34px;
+      color: var(--dark-green-color);
+      text-transform: capitalize;
+    }
   }
 }

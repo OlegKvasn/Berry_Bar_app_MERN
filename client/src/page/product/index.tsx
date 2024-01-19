@@ -8,6 +8,7 @@ import { IProduct } from "../../lib/types";
 import { useAppDispatch } from "../../lib/redux/store-hooks";
 import { addToCart } from "../../lib/redux/cart-slice";
 import { useTranslation } from "react-i18next";
+import LoadingDots from "../../components/loading";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -29,7 +30,7 @@ const ProductPage = () => {
   return (
     <div className={style.product}>
       {isLoading ? (
-        "Завантажується"
+        <LoadingDots />
       ) : error ? (
         "Щось пішло не так"
       ) : (

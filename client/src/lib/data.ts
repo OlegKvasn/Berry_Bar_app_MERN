@@ -5,31 +5,37 @@ export const category = [
     name: "піцца",
     name_en: "pizza",
     value: "pizza",
+    img: "/category/pizza.jpg",
   },
   {
     name: "бургер",
     name_en: "burger",
     value: "burger",
+    img: "/category/burger.jpg",
   },
   {
     name: "паста",
     name_en: "pasta",
     value: "pasta",
+    img: "/category/pasta.jpg",
   },
   {
     name: "салати",
     name_en: "salad",
     value: "salad",
+    img: "/category/salad.jpg",
   },
   {
     name: "гриль",
     name_en: "grill",
     value: "grill",
+    img: "/category/grill.jpg",
   },
   {
     name: "напої",
     name_en: "drink",
     value: "drink",
+    img: "/category/drink.jpg",
   },
 ] as const;
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import style from "./login.module.scss";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { newRequest } from "../../lib/utils";
 import { AxiosError } from "axios";
 import TextField from "@mui/material/TextField";
@@ -66,6 +66,7 @@ const LoginPage = () => {
     <div className={style.mainContainer}>
       <form noValidate onSubmit={handleSubmit(onSubmit, onError)}>
         <h1>{t("login.log_title")}</h1>
+        <p>{t("login.log_title_2")}</p>
         <TextField
           id="email"
           label={t("login.email")}
@@ -95,6 +96,11 @@ const LoginPage = () => {
         ) : null}
         <CustomButton type="submit">{t("login.log_btn")}</CustomButton>
       </form>
+      <hr />
+      <div className={style.footer}>
+        <p>{t("login.footer")}</p>
+        <Link to="/register">{t("login.register")}</Link>
+      </div>
     </div>
   );
 };

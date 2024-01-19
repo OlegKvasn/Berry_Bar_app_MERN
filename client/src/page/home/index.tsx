@@ -2,26 +2,31 @@ import style from "./home.module.scss";
 import Featured from "../../components/featured";
 import Carousel from "../../UI/Slider";
 import CatCard from "../../components/category-card";
-import { cards } from "../../lib/fake-data";
+import Grid from "../../components/grid";
+import { category } from "../../lib/data";
+import CarouselCard from "../../components/carousel-card";
 
 const HomePage = () => {
   return (
     <main className={style.mainContainer}>
       <Featured />
+      <section className={style.category}>
+        <Grid>
+          {category.map((card) => (
+            <CatCard item={card} key={card.value} />
+          ))}
+        </Grid>
+      </section>
       <Carousel slidesToShow={5} slidesToScroll={5}>
-        {cards.map((card) => (
-          <CatCard item={card} key={card.id} />
+        {category.map((card) => (
+          <CarouselCard item={card} key={card.value} />
         ))}
       </Carousel>
-      <h1>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </h1>
+      <Carousel slidesToShow={5} slidesToScroll={5}>
+        {category.map((card) => (
+          <CarouselCard item={card} key={card.value} />
+        ))}
+      </Carousel>
     </main>
   );
 };

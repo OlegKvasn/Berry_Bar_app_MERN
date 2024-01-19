@@ -3,10 +3,10 @@
     "menu": "Menu",
     "contacts": "Contacts",
     "cart": "Cart",
-    "register": "SignUp",
-    "login": "SignIn"
+    "login": "Log In"
   },
   "acc_menu": {
+    "profile": "Profile",
     "add_new_product": "Add new product",
     "all_products": "All products",
     "orders": "Orders",
@@ -15,6 +15,8 @@
   },
   "register": {
     "reg_title": "New user registration",
+    "reg_title_2": "Already have an account?",
+    "login": "Login",
     "username": "* Name",
     "email": "* Email Address",
     "pass": "* Password",
@@ -32,10 +34,13 @@
     "err_email_exist": "Email already in use"
   },
   "login": {
-    "log_title": "SignIn",
+    "log_title": "Login",
+    "log_title_2": "Welcome back",
     "email": "* Email Address",
     "pass": "* Password",
     "log_btn": "Login",
+    "footer": "Don’t have an account?",
+    "register": "Join",
     "err_email_req": "Enter your Email",
     "err_email_wrong": "Wrong Email format",
     "err_pass": "Enter your password",

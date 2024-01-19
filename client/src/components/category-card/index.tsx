@@ -1,22 +1,25 @@
 import { Link } from "react-router-dom";
 import style from "./catCard.module.scss";
+import Grid from "../grid";
+import { useTranslation } from "react-i18next";
 
 interface CatCard {
-  id: number;
-  title: string;
-  desc: string;
+  name: string;
+  name_en: string;
   img: string;
 }
 
 const CatCard = ({ item }: { item: CatCard }) => {
+  const { i18n } = useTranslation();
   return (
-    <Link to="/product/112">
-      <div className={style.mainContainer}>
-        <img src={item.img} alt={item.title} />
-        <span className={style.title}>{item.title}</span>
-        <span className={style.desc}>{item.desc}</span>
-      </div>
-    </Link>
+    <Grid.Item className={style.mainContainer}>
+      <Link to={`/products?category=${item.name_en}`}>
+        <img src={item.img} alt={item.name} />
+        <div className={style.title}>
+          <span>{i18n.language === "en" ? item.name_en : item.name}</span>
+        </div>
+      </Link>
+    </Grid.Item>
   );
 };
 

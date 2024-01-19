@@ -1,16 +1,19 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import style from "./navbar.module.scss";
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "../../lib/utils";
 import { category } from "../../lib/data";
 import AccountMenu from "../account-menu";
 import { useTranslation } from "react-i18next";
+import CartButton from "../../UI/icon-button/shopping-cart";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
   const { pathname } = useLocation();
   const currentUser = getCurrentUser();
   const { t, i18n } = useTranslation();
+
+  const navigate = useNavigate();
 
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -38,13 +41,11 @@ const Navbar = () => {
             <a href="#contacts">{t("navigation.contacts")}</a>
           </li>
           <li>
-            <Link to="/cart">{t("navigation.cart")}</Link>
+            <CartButton
+              navigationStatus={active}
+              onClick={() => navigate("/cart")}
+            />
           </li>
-          {!currentUser.username && (
-            <li>
-              <Link to="/register">{t("navigation.register")}</Link>
-            </li>
-          )}
           {!currentUser.username && (
             <li>
               <button className={style.button}>
@@ -52,19 +53,22 @@ const Navbar = () => {
               </button>
             </li>
           )}
-          {currentUser.username ? <AccountMenu /> : null}
-          <button
-            disabled={i18n.language === "en"}
-            onClick={() => i18n.changeLanguage("en")}
-          >
-            en
-          </button>
-          <button
-            disabled={i18n.language === "uk"}
-            onClick={() => i18n.changeLanguage("uk")}
-          >
-            ua
-          </button>
+          {currentUser.username ? <AccountMenu status={active} /> : null}
+          <div className={style.languageBar}>
+            <button
+              disabled={i18n.language === "uk"}
+              onClick={() => i18n.changeLanguage("uk")}
+            >
+              ua
+            </button>
+            <hr />
+            <button
+              disabled={i18n.language === "en"}
+              onClick={() => i18n.changeLanguage("en")}
+            >
+              en
+            </button>
+          </div>
         </ul>
       </nav>
       {(active || pathname !== "/") && (

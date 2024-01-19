@@ -6,6 +6,7 @@
   --gray-color: #242424;
   --gray-color-2: #525252;
   --gray-color-3: #cccccc;
+  --gray-color-4: #ebebeb;
   --green-color: #88b06a;
   --green-color-2: #6c8d53;
   --dark-green-color: #013914;
@@ -13,7 +14,7 @@
 
   color-scheme: light dark;
   color: var(--gray-color);
-  background-color: #ebebeb;
+  background-color: var(--gray-color-4);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

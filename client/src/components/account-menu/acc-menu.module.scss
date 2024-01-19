@@ -1,6 +1,23 @@
-.img {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
+.button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  &:hover {
+    .username {
+      opacity: 0.5;
+    }
+  }
+  .username {
+    color: #fff;
+    margin-top: 5px;
+    &.username[data-navbar="active"] {
+      color: var(--green-color);
+    }
+  }
+  .img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 }

@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import LoadingDots from "../../components/loading";
 
 const pattern = /(?:category+)/;
 
@@ -34,62 +35,64 @@ const ProductsPage = () => {
   }, [sort, search, refetch]);
   return (
     <>
-      <main className={style.container}>
-        <nav className={style.menu}>
-          <div className={style.left}>
-            {pattern.test(search) ? (
-              <>
-                <Link to="/products">{t("products.menu")}</Link>
-                {i18n.language === "en" ? (
-                  <span className={style.cat}>{` ⤍  ${
-                    category.find(({ value }) => value === search.slice(10))
-                      ?.name_en
-                  }`}</span>
-                ) : (
-                  <span className={style.cat}>{` ⤍  ${
-                    category.find(({ value }) => value === search.slice(10))
-                      ?.name
-                  }`}</span>
-                )}
-              </>
-            ) : null}
-          </div>
-          <div className={style.right}>
-            <span className={style.sortBy}>{t("products.sort_by")}</span>
-            <FormControl fullWidth sx={{ mt: 2 }} variant="standard">
-              <Select defaultValue="createdAt" id="sort">
-                <MenuItem
-                  value="createdAt"
-                  onClick={() => setSort("createdAt")}
-                >
-                  {t("products.new_first")}
-                </MenuItem>
-                <MenuItem value="sales" onClick={() => setSort("sales")}>
-                  {t("products.most_popular")}
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-        </nav>
-        {category.map((cat) => (
-          <>
-            {!pattern.test(search) ? (
-              <h1>{i18n.language === "en" ? cat.name_en : cat.name}</h1>
-            ) : null}
-            <Grid>
-              {isLoading
-                ? "Завантаження"
-                : error
-                ? "щось пішло не так"
-                : data
-                    ?.filter((prod) => prod.category === cat.value)
-                    .map((product) => (
-                      <ProductCard key={product._id} item={product} />
-                    ))}
-            </Grid>
-          </>
-        ))}
-      </main>
+      {isLoading ? (
+        <LoadingDots />
+      ) : error ? (
+        "щось пішло не так"
+      ) : (
+        <main className={style.container}>
+          <nav className={style.menu}>
+            <div className={style.left}>
+              {pattern.test(search) ? (
+                <>
+                  <Link to="/products">{t("products.menu")}</Link>
+                  {i18n.language === "en" ? (
+                    <span className={style.cat}>{` ⤍  ${
+                      category.find(({ value }) => value === search.slice(10))
+                        ?.name_en
+                    }`}</span>
+                  ) : (
+                    <span className={style.cat}>{` ⤍  ${
+                      category.find(({ value }) => value === search.slice(10))
+                        ?.name
+                    }`}</span>
+                  )}
+                </>
+              ) : null}
+            </div>
+            <div className={style.right}>
+              <span className={style.sortBy}>{t("products.sort_by")}</span>
+              <FormControl fullWidth sx={{ mt: 2 }} variant="standard">
+                <Select defaultValue="createdAt" id="sort">
+                  <MenuItem
+                    value="createdAt"
+                    onClick={() => setSort("createdAt")}
+                  >
+                    {t("products.new_first")}
+                  </MenuItem>
+                  <MenuItem value="sales" onClick={() => setSort("sales")}>
+                    {t("products.most_popular")}
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+          </nav>
+          {category.map((cat) => (
+            <>
+              {!pattern.test(search) ? (
+                <h1>{i18n.language === "en" ? cat.name_en : cat.name}</h1>
+              ) : null}
+              <Grid>
+                {data
+                  ?.filter((prod) => prod.category === cat.value)
+                  .map((product) => (
+                    <ProductCard key={product._id} item={product} />
+                  ))}
+              </Grid>
+            </>
+          ))}
+        </main>
+      )}
     </>
   );
 };
