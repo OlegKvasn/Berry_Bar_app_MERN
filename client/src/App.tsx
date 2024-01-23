@@ -1,6 +1,7 @@
 import {
   Outlet,
   RouterProvider,
+  ScrollRestoration,
   createBrowserRouter,
   useNavigation,
 } from "react-router-dom";
@@ -26,6 +27,7 @@ function App() {
     const { state } = useNavigation();
     return (
       <>
+        <ScrollRestoration />
         <Navbar />
         {state === "loading" ? <div role="loader">Loading</div> : null}
         <Outlet />

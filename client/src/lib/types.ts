@@ -28,7 +28,7 @@ export interface IProduct {
   desc?: string;
   desc_en?: string;
   isVegan: boolean;
-  isNew: boolean;
+  isNewIncome: boolean;
   isHot: boolean;
   isDeal: boolean;
   createdAt: string;

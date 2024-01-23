@@ -34,6 +34,7 @@ const AddEditProductPage = () => {
   const [errorWrongId, setErrorWrongId] = useState(false);
   const [state, dispatch] = useReducer(productReducer, INITIAL_STATE);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -56,7 +57,7 @@ const AddEditProductPage = () => {
               desc: data.desc || "",
               desc_en: data.desc_en || "",
               isVegan: data.isVegan,
-              isNew: data.isNew,
+              isNewIncome: data.isNewIncome,
               isHot: data.isHot,
               isDeal: data.isDeal,
             },
@@ -127,8 +128,6 @@ const AddEditProductPage = () => {
     dispatch({ type: "REMOVE_IMAGE", payload: { cover: "" } });
     setUploaded(false);
   };
-
-  const navigate = useNavigate();
 
   const createProductMutation = useMutation({
     mutationFn: (newProduct: TState) => {
@@ -348,8 +347,8 @@ const AddEditProductPage = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={state.isNew}
-              name="isNew"
+              checked={state.isNewIncome}
+              name="isNewIncome"
               onChange={handleChangeCheckbox}
             />
           }
@@ -403,7 +402,7 @@ const AddEditProductPage = () => {
             salePrice={state.salePrice}
             price={state.price}
             isVegan={state.isVegan}
-            isNew={state.isNew}
+            isNewIncome={state.isNewIncome}
             isHot={state.isHot}
             isDeal={state.isDeal}
           />

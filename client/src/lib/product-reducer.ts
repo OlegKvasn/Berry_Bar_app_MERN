@@ -10,7 +10,7 @@ export type TState = {
   desc: string;
   desc_en: string;
   isVegan: boolean;
-  isNew: boolean;
+  isNewIncome: boolean;
   isHot: boolean;
   isDeal: boolean;
 };
@@ -95,7 +95,7 @@ export const INITIAL_STATE = {
   desc: "",
   desc_en: "",
   isVegan: false,
-  isNew: false,
+  isNewIncome: false,
   isHot: false,
   isDeal: false,
 } satisfies TState;
@@ -160,7 +160,7 @@ export const productReducer = (state: TState, action: ActionType) => {
         desc: action.payload.desc,
         desc_en: action.payload.desc_en,
         isVegan: action.payload.isVegan,
-        isNew: action.payload.isNew,
+        isNewIncome: action.payload.isNewIncome,
         isHot: action.payload.isHot,
         isDeal: action.payload.isDeal,
       };

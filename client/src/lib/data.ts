@@ -8,10 +8,10 @@ export const category = [
     img: "/category/pizza.jpg",
   },
   {
-    name: "бургер",
-    name_en: "burger",
-    value: "burger",
-    img: "/category/burger.jpg",
+    name: "роли",
+    name_en: "sushi",
+    value: "sushi",
+    img: "/category/sushi.jpg",
   },
   {
     name: "паста",

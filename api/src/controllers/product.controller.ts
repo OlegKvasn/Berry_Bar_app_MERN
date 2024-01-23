@@ -24,6 +24,8 @@ export const getProducts: RequestHandler = async (req, res, next) => {
       ],
     }),
     ...(q.category && { category: q.category }),
+    ...(q.new && { isNewIncome: q.new }),
+    ...(q.hot && { isHot: q.hot }),
   };
 
   const sortOptions: { [key: string]: SortOrder } = {};
@@ -104,7 +106,7 @@ export const updateProduct: RequestHandler<
   const newIngredientsEn = req.body.ingredients_en;
   const newImages = req.body.images;
   const newIsVegan = req.body.isVegan;
-  const newIsNew = req.body.isNew;
+  const newIsNewIncome = req.body.isNewIncome;
   const newIsHot = req.body.isHot;
   const newIsDeal = req.body.isDeal;
   try {
@@ -136,7 +138,7 @@ export const updateProduct: RequestHandler<
     product.ingredients_en = newIngredientsEn;
     product.images = newImages;
     product.isVegan = newIsVegan;
-    product.isNew = newIsNew;
+    product.isNewIncome = newIsNewIncome;
     product.isHot = newIsHot;
     product.isDeal = newIsDeal;
 

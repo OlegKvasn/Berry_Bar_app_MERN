@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import style from "./products.module.scss";
 import ProductCard from "../../components/product-card";
 import Grid from "../../components/grid";
@@ -16,7 +16,7 @@ import LoadingDots from "../../components/loading";
 const pattern = /(?:category+)/;
 
 const ProductsPage = () => {
-  const [sort, setSort] = useState("sales");
+  const [sort, setSort] = useState("createdAt");
   const { search } = useLocation();
   const { t, i18n } = useTranslation();
 
@@ -78,8 +78,8 @@ const ProductsPage = () => {
             </div>
           </nav>
           {category.map((cat) => (
-            <>
-              {!pattern.test(search) ? (
+            <Fragment key={cat.value}>
+              {!search ? (
                 <h1>{i18n.language === "en" ? cat.name_en : cat.name}</h1>
               ) : null}
               <Grid>
@@ -89,7 +89,7 @@ const ProductsPage = () => {
                     <ProductCard key={product._id} item={product} />
                   ))}
               </Grid>
-            </>
+            </Fragment>
           ))}
         </main>
       )}

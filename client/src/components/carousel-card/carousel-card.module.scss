@@ -1,32 +1,63 @@
+a:hover {
+  opacity: 0.9 !important;
+}
+
 .mainContainer {
+  padding: 10px;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  //justify-content: space-around;
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
-  position: relative;
   margin: 0 5px;
   overflow: hidden;
-
-  img {
-    aspect-ratio: 20/30;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  transition: all 0.2s ease;
+  border-radius: 40px;
+  &:hover {
+    transform: translate(-2%, -2%);
+  }
+  .imgContainer {
+    position: relative;
+    img {
+      aspect-ratio: 20/30;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .title {
+      width: 95%;
+      position: absolute;
+      display: flex;
+      bottom: 5px;
+      background-color: #ffffffa2;
+      border-radius: 10px;
+      justify-content: center;
+      span {
+        text-align: center;
+        margin: 5px 20px;
+        font-weight: 500;
+        font-size: 24px;
+        color: var(--dark-green-color);
+      }
+    }
   }
 
-  .title {
-    font-weight: 500;
-    font-size: 24px;
-    position: absolute;
-    top: 15px;
-    left: 15px;
-  }
-
-  .desc {
-    font-weight: 300;
-    position: absolute;
-    top: 40px;
-    left: 15px;
+  .details {
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    .price {
+      color: #555;
+      font-size: 18px;
+      font-weight: 400;
+    }
+    .btnText {
+      color: #fff;
+      font-size: 20px;
+      padding: 0 5px;
+    }
   }
 }

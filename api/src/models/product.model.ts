@@ -52,11 +52,15 @@ const ProductSchema = new Schema(
       type: Number,
       default: 0,
     },
+    favorite: {
+      type: Number,
+      default: 0,
+    },
     isVegan: {
       type: Boolean,
       default: false,
     },
-    isNew: {
+    isNewIncome: {
       type: Boolean,
       default: false,
     },
