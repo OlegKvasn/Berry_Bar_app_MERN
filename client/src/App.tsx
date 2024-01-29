@@ -1,3 +1,4 @@
+import style from "./app.module.scss";
 import {
   Outlet,
   RouterProvider,
@@ -16,22 +17,33 @@ import HomePage from "./page/home";
 //import RegisterPage from "./page/register";
 import OrdersPage from "./page/orders";
 import AddEditProductPage from "./page/add-edit-product";
-import CartPage from "./page/cart";
+import Cart from "./components/cart";
 import ProductsAdminPage from "./page/products-admin";
 import CheckOutPage from "./page/check-out";
 import RegisterHookFormPage from "./page/register-hook-form";
 import "./lib/i18n";
+import { getCartState } from "./lib/redux/open-cart-slice";
+import { useSelector } from "react-redux";
 
 function App() {
   const Layout = () => {
+    const isOpenCart = useSelector(getCartState);
     const { state } = useNavigation();
+
     return (
       <>
         <ScrollRestoration />
         <Navbar />
         {state === "loading" ? <div role="loader">Loading</div> : null}
-        <Outlet />
-        <Footer />
+
+        <main
+          className={style.mainContent}
+          data-cart={isOpenCart ? "open" : "close"}
+        >
+          <Outlet />
+          <Cart />
+          <Footer />
+        </main>
       </>
     );
   };
@@ -49,10 +61,6 @@ function App() {
         {
           path: "/orders",
           element: <OrdersPage />,
-        },
-        {
-          path: "/cart",
-          element: <CartPage />,
         },
         {
           path: "/check-out",

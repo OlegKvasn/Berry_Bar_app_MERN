@@ -63,7 +63,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className={style.mainContainer}>
+    <section className={style.mainContainer}>
       <form noValidate onSubmit={handleSubmit(onSubmit, onError)}>
         <h1>{t("login.log_title")}</h1>
         <p>{t("login.log_title_2")}</p>
@@ -101,7 +101,7 @@ const LoginPage = () => {
         <p>{t("login.footer")}</p>
         <Link to="/register">{t("login.register")}</Link>
       </div>
-    </div>
+    </section>
   );
 };
 

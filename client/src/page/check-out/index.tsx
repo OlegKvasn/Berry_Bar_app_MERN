@@ -121,7 +121,7 @@ const CheckOutPage = () => {
   };
 
   return (
-    <main className={style.mainContainer}>
+    <section className={style.mainContainer}>
       <form className={style.form} onSubmit={handleSubmit(onSubmit, onError)}>
         <h1>{t("check_out.title")}</h1>
         <p>{t("check_out.order_price", { totalPrice })}</p>
@@ -288,7 +288,7 @@ const CheckOutPage = () => {
           <p>{creationStatus === "error" ? mutationErrorMessage : null}</p>
         </DialogModal>
       </form>
-    </main>
+    </section>
   );
 };
 

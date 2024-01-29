@@ -81,7 +81,7 @@ const RegisterHookFormPage = () => {
   };
 
   return (
-    <div className={style.mainContainer}>
+    <section className={style.mainContainer}>
       <h1>{t("register.reg_title")}</h1>
       <div className={style.title2}>
         <p>{t("register.reg_title_2")}</p>
@@ -142,7 +142,7 @@ const RegisterHookFormPage = () => {
         <CustomButton type="submit">{t("register.reg_btn")}</CustomButton>
         <p>{t("register.reg_footer")}</p>
       </form>
-    </div>
+    </section>
   );
 };
 

@@ -40,7 +40,7 @@ const ProductsPage = () => {
       ) : error ? (
         "щось пішло не так"
       ) : (
-        <main className={style.container}>
+        <article className={style.container}>
           <nav className={style.menu}>
             <div className={style.left}>
               {pattern.test(search) ? (
@@ -91,7 +91,7 @@ const ProductsPage = () => {
               </Grid>
             </Fragment>
           ))}
-        </main>
+        </article>
       )}
     </>
   );

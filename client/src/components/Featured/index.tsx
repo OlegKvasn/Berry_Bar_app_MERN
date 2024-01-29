@@ -3,8 +3,11 @@ import style from "./featured.module.scss";
 import { useNavigate } from "react-router-dom";
 import { popular } from "../../lib/data";
 import { Trans, useTranslation } from "react-i18next";
+import { getCartState } from "../../lib/redux/open-cart-slice";
+import { useSelector } from "react-redux";
 
 const Featured = () => {
+  const isOpenCart = useSelector(getCartState);
   const [input, setInput] = useState("");
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
@@ -49,9 +52,12 @@ const Featured = () => {
             ))}
           </div>
         </div>
-        <div className={style.right}>
-          <img src="./img/Berry_bar.png" alt="" />
-        </div>
+        <img
+          className={style.mainImage}
+          data-cart={isOpenCart ? "open" : "close"}
+          src="./img/Berry_bar.png"
+          alt=""
+        />
       </section>
     </>
   );

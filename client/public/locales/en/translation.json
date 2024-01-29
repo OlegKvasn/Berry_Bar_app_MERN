@@ -13,6 +13,10 @@
     "settings": "Settings",
     "logout": "Logout"
   },
+  "home": {
+    "new": "New:",
+    "popular": "Popular:"
+  },
   "register": {
     "reg_title": "New user registration",
     "reg_title_2": "Already have an account?",

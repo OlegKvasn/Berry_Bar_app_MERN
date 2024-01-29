@@ -156,7 +156,7 @@ const AddEditProductPage = () => {
   };
 
   return (
-    <main className={style.mainContainer}>
+    <section className={style.mainContainer}>
       {errorWrongId ? (
         <ErrorModal
           errorMessage="Продукту з таким ID не існує"
@@ -409,7 +409,7 @@ const AddEditProductPage = () => {
           <CustomButton type="submit">Підтвердити</CustomButton>
         </DialogModal>
       </form>
-    </main>
+    </section>
   );
 };
 

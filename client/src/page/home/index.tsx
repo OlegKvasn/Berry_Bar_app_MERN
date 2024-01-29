@@ -9,8 +9,11 @@ import { useQuery } from "@tanstack/react-query";
 import { newRequest } from "../../lib/utils";
 import { IProduct } from "../../lib/types";
 import LoadingDots from "../../components/loading";
+import { useTranslation } from "react-i18next";
 
 const HomePage = () => {
+  const { t } = useTranslation();
+
   const {
     isLoading: newProductsLoading,
     error: newProductsError,
@@ -36,7 +39,7 @@ const HomePage = () => {
   });
 
   return (
-    <main className={style.mainContainer}>
+    <article className={style.mainContainer}>
       <Featured />
       <section className={style.category}>
         <Grid>
@@ -46,7 +49,7 @@ const HomePage = () => {
         </Grid>
       </section>
       <section>
-        <h2>Новинки:</h2>
+        <h2>{t("home.new")}</h2>
         {newProductsLoading ? (
           <LoadingDots />
         ) : newProductsError ? (
@@ -60,7 +63,7 @@ const HomePage = () => {
         )}
       </section>
       <section>
-        <h2>Популярне:</h2>
+        <h2>{t("home.popular")}</h2>
         {hotProductsLoading ? (
           <LoadingDots />
         ) : hotProductsError ? (
@@ -73,7 +76,7 @@ const HomePage = () => {
           </Carousel>
         )}
       </section>
-    </main>
+    </article>
   );
 };
 

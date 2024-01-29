@@ -17,12 +17,12 @@ const ErrorPage: React.FC = () => {
   }
 
   return (
-    <div>
+    <section>
       <h1>Ooops!</h1>
       <p>Sorry, this page did`t exist</p>
       <p>{errorMessage}</p>
       <NavLink to="/">Go home..</NavLink>
-    </div>
+    </section>
   );
 };
 

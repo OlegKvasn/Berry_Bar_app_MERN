@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import style from "./navbar.module.scss";
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "../../lib/utils";
@@ -6,14 +6,15 @@ import { category } from "../../lib/data";
 import AccountMenu from "../account-menu";
 import { useTranslation } from "react-i18next";
 import CartButton from "../../UI/icon-button/shopping-cart";
+import { useAppDispatch } from "../../lib/redux/store-hooks";
+import { openCloseCart } from "../../lib/redux/open-cart-slice";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
   const { pathname } = useLocation();
   const currentUser = getCurrentUser();
   const { t, i18n } = useTranslation();
-
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -43,7 +44,7 @@ const Navbar = () => {
           <li>
             <CartButton
               navigationStatus={active}
-              onClick={() => navigate("/cart")}
+              onClick={() => dispatch(openCloseCart())}
             />
           </li>
           {!currentUser.username && (

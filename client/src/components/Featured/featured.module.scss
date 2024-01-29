@@ -66,10 +66,12 @@
       }
     }
   }
-  .right {
-    img {
-      width: 50vw;
-      object-fit: contain;
+  .mainImage {
+    width: 50vw;
+    object-fit: contain;
+    transition: all 0.5s ease;
+    &.mainImage[data-cart="open"] {
+      display: none;
     }
   }
 }

@@ -5,18 +5,18 @@ import {
   getTotalPrice,
   removeFromCart,
 } from "../../lib/redux/cart-slice";
+import { getCartState } from "../../lib/redux/open-cart-slice";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../lib/redux/store-hooks";
 import DeleteButton from "../../UI/icon-button/delete";
-//import { getCurrentUser } from "../../lib/utils";
 import CustomButton from "../../UI/button";
 import { useTranslation } from "react-i18next";
 
-const CartPage = () => {
+const Cart = () => {
   const cartProducts = useSelector(getCartProducts);
   const totalPrice = useSelector(getTotalPrice);
+  const isOpenCart = useSelector(getCartState);
   const dispatch = useAppDispatch();
-  //const currentUser = getCurrentUser();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
 
@@ -25,21 +25,12 @@ const CartPage = () => {
   };
 
   const handleCheckOut = () => {
-    // if (!currentUser._id) {
-    //   navigate("/login");
-    // } else {
     navigate("/check-out");
-    //}
   };
 
   return (
-    <div className={style.cart}>
-      <div className={style.title}>
-        <h1>{t("cart.cart")}</h1>
-        <CustomButton type="button" onClick={handleCheckOut}>
-          {t("cart.order_btn")}
-        </CustomButton>
-      </div>
+    <aside className={style.cart} data-cart={isOpenCart ? "open" : "close"}>
+      <h2>{t("cart.cart")}</h2>
       <table>
         <thead>
           <tr>
@@ -79,8 +70,15 @@ const CartPage = () => {
         </tbody>
       </table>
       <h2>{t("cart.total_price", { amount: totalPrice })}</h2>
-    </div>
+      <CustomButton
+        type="button"
+        onClick={handleCheckOut}
+        className={style.checkoutBtn}
+      >
+        {t("cart.order_btn")}
+      </CustomButton>
+    </aside>
   );
 };
 
-export default CartPage;
+export default Cart;
