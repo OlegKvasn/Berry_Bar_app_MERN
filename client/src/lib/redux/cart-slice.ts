@@ -52,6 +52,14 @@ const cartSlice = createSlice({
         return state.filter((product) => product.productId !== action.payload);
       }
     },
+    addQuantity: (state, action: PayloadAction<string>) => {
+      const productIndex = state.findIndex(
+        (product) => product.productId === action.payload
+      );
+
+      state[productIndex].quantity++;
+      setLocalStorage(state);
+    },
     clearCart: () => {
       setLocalStorage([]);
       return initialState;
@@ -69,6 +77,7 @@ export const getTotalProducts = (state: RootState) =>
   state.cart.reduce((acc, next) => (acc += next.quantity), 0);
 
 // Action creators are generated for each case reducer function
-export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, addQuantity, clearCart } =
+  cartSlice.actions;
 
 export default cartSlice.reducer;

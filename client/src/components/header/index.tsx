@@ -7,7 +7,8 @@ import AccountMenu from "../account-menu";
 import { useTranslation } from "react-i18next";
 import CartButton from "../../UI/icon-button/shopping-cart";
 import { useAppDispatch } from "../../lib/redux/store-hooks";
-import { openCloseCart } from "../../lib/redux/open-cart-slice";
+import { getCartState, openCloseCart } from "../../lib/redux/open-cart-slice";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
@@ -15,6 +16,7 @@ const Navbar = () => {
   const currentUser = getCurrentUser();
   const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
+  const isOpenCart = useSelector(getCartState);
 
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -72,10 +74,13 @@ const Navbar = () => {
           </div>
         </ul>
       </nav>
-      {(active || pathname !== "/") && (
+      {(active || isOpenCart || pathname !== "/") && (
         <>
           <hr />
-          <section className={style.menu}>
+          <section
+            className={style.menu}
+            data-navbar={active || pathname !== "/" ? "active" : "inactive"}
+          >
             {category.map((cat) => (
               <Link
                 key={cat.value}
@@ -86,7 +91,7 @@ const Navbar = () => {
               </Link>
             ))}
           </section>
-          {/* <hr /> */}
+          <hr />
         </>
       )}
     </header>

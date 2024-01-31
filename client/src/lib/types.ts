@@ -7,6 +7,7 @@ export interface IUser {
   isAdmin: string;
   img?: string;
   address?: string;
+  favorite?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -25,6 +26,7 @@ export interface IProduct {
   cover: string;
   images?: string;
   sales: number;
+  favorite: number;
   desc?: string;
   desc_en?: string;
   isVegan: boolean;

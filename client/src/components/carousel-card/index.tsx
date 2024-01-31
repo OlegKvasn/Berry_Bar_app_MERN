@@ -8,7 +8,7 @@ import { addToCart } from "../../lib/redux/cart-slice";
 import { MouseEvent } from "react";
 
 const CarouselCard = ({ item }: { item: IProduct }) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
 
   const handleAddToCart = (event: MouseEvent<HTMLButtonElement>) => {
@@ -38,8 +38,9 @@ const CarouselCard = ({ item }: { item: IProduct }) => {
             type="button"
             borderRadius={10}
             onClick={handleAddToCart}
+            className={style.addBtn}
           >
-            <span className={style.btnText}>+</span>
+            <span className={style.btnText}>{t("main.add")}</span>
           </CustomButton>
         </div>
       </div>

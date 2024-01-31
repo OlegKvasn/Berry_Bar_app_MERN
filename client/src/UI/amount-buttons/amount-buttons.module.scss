@@ -1,0 +1,39 @@
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  &.buttonGroup[data-border="yes"] {
+    border: 3px solid var(--green-color-2);
+    border-radius: 10px;
+    height: 43px;
+  }
+  .button {
+    height: 20px;
+    width: 20px;
+    margin: 0 15px 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    transition: all 0.5s ease;
+    &:hover {
+      opacity: 0.7;
+    }
+    .icon {
+      height: 100%;
+      width: 100%;
+      color: red;
+    }
+    .btnText {
+      color: var(--green-color-2);
+      font-family: "Courier New", Courier, monospace;
+      font-size: 35px;
+      font-weight: 600;
+    }
+  }
+  .amount {
+    font-weight: 700;
+  }
+}

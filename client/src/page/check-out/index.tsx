@@ -124,7 +124,15 @@ const CheckOutPage = () => {
     <section className={style.mainContainer}>
       <form className={style.form} onSubmit={handleSubmit(onSubmit, onError)}>
         <h1>{t("check_out.title")}</h1>
-        <p>{t("check_out.order_price", { totalPrice })}</p>
+        <p className={style.total}>
+          {t("check_out.order_price", { totalPrice })}
+        </p>
+        {totalPrice < minOrderPrice ? (
+          <p className={style.error}>
+            {t("check_out.min_order_msg", { minOrderPrice })}
+          </p>
+        ) : null}
+
         <fieldset className={style.fieldset}>
           <h2>{t("check_out.title_2")}</h2>
           <label htmlFor="username" className={style.label}>
@@ -269,11 +277,7 @@ const CheckOutPage = () => {
         >
           {t("check_out.order_btn")}
         </CustomButton>
-        <p className={style.error}>
-          {totalPrice < minOrderPrice
-            ? t("check_out.min_order_msg", { minOrderPrice })
-            : null}
-        </p>
+
         <p>{t("check_out.footer")}</p>
         <DialogModal
           isOpen={isOpenModal}

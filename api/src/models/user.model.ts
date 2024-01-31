@@ -25,6 +25,9 @@ const UserSchema = new Schema(
     address: {
       type: String,
     },
+    favorite: {
+      type: [String],
+    },
     isAdmin: {
       type: Boolean,
       default: false,

@@ -13,10 +13,12 @@
   }
 
   .info {
+    height: 120px;
     padding: 10px 20px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    justify-content: space-between;
+    gap: 10px;
 
     .star {
       display: flex;
@@ -40,18 +42,31 @@
   }
 
   .details {
+    width: 100%;
     padding: 10px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    img {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
+    .star {
+      width: 20%;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      img {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+      span {
+        font-size: 15px;
+        font-weight: 500;
+        color: #999;
+      }
     }
 
     .price {
+      width: 20%;
       span {
         color: #999;
         font-size: 12px;
@@ -61,6 +76,10 @@
         font-size: 18px;
         font-weight: 400;
       }
+    }
+    .addBtn {
+      margin: 0;
+      color: #fff;
     }
   }
 }

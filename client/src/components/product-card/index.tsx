@@ -3,9 +3,28 @@ import style from "./productCard.module.scss";
 import Grid from "../grid";
 import { IProduct } from "../../lib/types";
 import { useTranslation } from "react-i18next";
+import CustomButton from "../../UI/button";
+import { MouseEvent } from "react";
+import { useAppDispatch } from "../../lib/redux/store-hooks";
+import { addToCart, getCartProducts } from "../../lib/redux/cart-slice";
+import { useSelector } from "react-redux";
+import AmountButtons from "../../UI/amount-buttons";
 
 const ProductCard = ({ item }: { item: IProduct }) => {
   const { t, i18n } = useTranslation();
+  const dispatch = useAppDispatch();
+  const cartProducts = useSelector(getCartProducts);
+
+  const handleAddToCart = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    event.preventDefault();
+    dispatch(addToCart(item));
+  };
+
+  const productInCart = cartProducts.find(
+    (product) => product.productId === item._id
+  );
+
   return (
     <Grid.Item>
       <Link to={`/product/${item._id}`}>
@@ -28,9 +47,25 @@ const ProductCard = ({ item }: { item: IProduct }) => {
           </div>
           <hr />
           <div className={style.details}>
-            <img src="./img/heart.png" alt="star" />
+            <div className={style.star}>
+              <img src="./img/heart.png" alt="star" />
+              <span>{item.favorite ? item.favorite : ""}</span>
+            </div>
+            {productInCart ? (
+              <AmountButtons product={productInCart} border={true} />
+            ) : (
+              <CustomButton
+                type="button"
+                borderRadius={10}
+                onClick={handleAddToCart}
+                className={style.addBtn}
+              >
+                <span className={style.btnText}>{t("main.add")}</span>
+              </CustomButton>
+            )}
+
             <div className={style.price}>
-              <span>{t("product.from")}</span>
+              {/* <span>{t("product.from")}</span> */}
               <h2>{`${item?.price} ₴`}</h2>
             </div>
           </div>

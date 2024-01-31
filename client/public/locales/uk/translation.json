@@ -1,4 +1,7 @@
 {
+  "main": {
+    "add": "+ Додати"
+  },
   "navigation": {
     "menu": "Меню",
     "contacts": "Контакти",
@@ -71,17 +74,18 @@
   },
   "cart": {
     "cart": "Корзина",
-    "order_btn": "Оформити замовлення",
-    "title": "Назва продукту",
-    "amount": "Кількість",
-    "price": "Ціна",
-    "total_price": "{{amount}} ГРН"
+    "cart-empty": "Ваша корзина виглядає трішки порожньою.",
+    "order_btn": "Підтвердіть",
+    "total_products_one": "{{count}} позиція",
+    "total_products_few": "{{count}} позиції",
+    "total_products_many": "{{count}} позицій",
+    "total_products_other": "{{count}} позицій"
   },
   "check_out": {
     "title": "Оформлення замовлення",
     "title_2": "Для кого замовлення",
     "title_3": "Спосіб доставки і оплати",
-    "order_price": "Цінна замовлення: {{totalPrice}} грн",
+    "order_price": "Всього до оплати: {{totalPrice}} грн",
     "username": "* Ім'я",
     "username_ph": "Вашого імені буде достатньо",
     "phone": "* Номер телефону",

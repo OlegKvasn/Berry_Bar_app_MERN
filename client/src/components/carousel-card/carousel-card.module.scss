@@ -54,10 +54,13 @@ a:hover {
       font-size: 18px;
       font-weight: 400;
     }
-    .btnText {
+    .addBtn {
+      margin: 5px 0;
       color: #fff;
-      font-size: 20px;
-      padding: 0 5px;
+      .btnText {
+        font-size: 20px;
+        padding: 0 5px;
+      }
     }
   }
 }

@@ -1,4 +1,7 @@
 {
+  "main": {
+    "add": "+ Add"
+  },
   "navigation": {
     "menu": "Menu",
     "contacts": "Contacts",
@@ -71,11 +74,10 @@
   },
   "cart": {
     "cart": "Your Basket",
-    "order_btn": "Make order",
-    "title": "Product",
-    "amount": "Amount",
-    "price": "Price",
-    "total_price": "{{amount}} UAH"
+    "cart-empty": "Your basket looks a little empty.",
+    "order_btn": "Checkout",
+    "total_products_one": "{{count}} item",
+    "total_products_other": "{{count}} items"
   },
   "check_out": {
     "title": "Checkout",
