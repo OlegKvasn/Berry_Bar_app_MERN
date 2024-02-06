@@ -9,11 +9,48 @@ import { useAppDispatch } from "../../lib/redux/store-hooks";
 import { addToCart, getCartProducts } from "../../lib/redux/cart-slice";
 import { useSelector } from "react-redux";
 import AmountButtons from "../../UI/amount-buttons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { getCurrentUser, newRequest } from "../../lib/utils";
+import { BsHeartFill } from "react-icons/bs";
 
-const ProductCard = ({ item }: { item: IProduct }) => {
+const ProductCard = ({
+  item,
+  favorite,
+}: {
+  item: IProduct;
+  favorite: boolean;
+}) => {
   const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
   const cartProducts = useSelector(getCartProducts);
+  const queryClient = useQueryClient();
+  const currentUser = getCurrentUser();
+
+  const { mutate, status } = useMutation({
+    mutationFn: (productId: string) => {
+      return newRequest.patch(
+        `/users/${favorite ? "delete" : "add"}/${productId}`
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["products"]);
+      queryClient.invalidateQueries(["user"]);
+    },
+    // onError: (err) => {
+    //   let message = "Щось пішло не так";
+
+    //   if (err instanceof AxiosError) {
+    //     message = err.response?.data.error || "Помилка сервера";
+    //   }
+    //   setMutationErrorMessage(message);
+    //},
+  });
+
+  const handleAddTofFavorite = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    event.preventDefault();
+    mutate(item._id);
+  };
 
   const handleAddToCart = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -47,10 +84,17 @@ const ProductCard = ({ item }: { item: IProduct }) => {
           </div>
           <hr />
           <div className={style.details}>
-            <div className={style.star}>
-              <img src="./img/heart.png" alt="star" />
+            <button
+              className={style.favoriteBtn}
+              onClick={handleAddTofFavorite}
+              disabled={!currentUser.username || status == "loading"}
+            >
+              <BsHeartFill
+                className={style.icon}
+                data-favorite={favorite ? "active" : "no"}
+              ></BsHeartFill>
               <span>{item.favorite ? item.favorite : ""}</span>
-            </div>
+            </button>
             {productInCart ? (
               <AmountButtons product={productInCart} border={true} />
             ) : (

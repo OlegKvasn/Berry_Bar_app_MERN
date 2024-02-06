@@ -48,21 +48,35 @@
     align-items: center;
     justify-content: space-between;
 
-    .star {
+    .favoriteBtn {
       width: 20%;
       display: flex;
+      padding: 10px 0;
       align-items: center;
-      gap: 5px;
-      img {
+      //justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      background-color: transparent;
+      border: none;
+      .icon {
+        color: #d4d4d4;
         width: 16px;
         height: 16px;
-        cursor: pointer;
+        &.icon[data-favorite="active"] {
+          color: var(--green-color);
+        }
       }
+
       span {
         font-size: 15px;
         font-weight: 500;
         color: #999;
       }
+    }
+
+    .addBtn {
+      margin: 0;
+      color: #fff;
     }
 
     .price {
@@ -76,10 +90,6 @@
         font-size: 18px;
         font-weight: 400;
       }
-    }
-    .addBtn {
-      margin: 0;
-      color: #fff;
     }
   }
 }
